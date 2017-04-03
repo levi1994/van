@@ -200,12 +200,12 @@
 	
 	  Van.prototype.clearRect = function () {
 	    var ctx = this.$ctx;
-	    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	    ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
 	  };
 	
 	  Van.prototype.reRender = function () {
-	
-	    if (this.isRoot) {
+	    console.log(this.name + 'WILL RE RENDER');
+	    if (this.$isRoot) {
 	      console.log(this.name + 'RE RENDER');
 	      this.clearRect();
 	      this._render();

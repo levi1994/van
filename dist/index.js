@@ -32,15 +32,22 @@ var Circle = Van.component({
     speed:1,
   },
   render: function(){
-    console.log("circle2 render");
+    console.log("circle2 render1");
   	this.$ctx.beginPath();
     console.log(this.data.x);
     console.log(this.data.y);
     this.$ctx.arc(this.data.x,this.data.y,30,0,Math.PI*2,true);
   	this.$ctx.fill();
+    // var self = this;
+    // var inter = setInterval(function(){
+    //   self.data.x ++;
+    //   if(self.data.x>200){
+    //     clearInterval(inter);
+    //   }
+    // },17);
   },
-  created: function(){
-
+  created: function() {
+    var self = this;
   },
   beforeRender: function(){
     console.log(this.name+" render before");
@@ -53,7 +60,7 @@ var Circle = Van.component({
   }
 });
 
-var Van = new Van({
+var van = new Van({
   el:"#canvas",
   data: {
     x:100,

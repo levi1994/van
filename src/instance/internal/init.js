@@ -32,9 +32,10 @@ export default function(Van) {
     this.data = this._initData(this, options.data, true);
 
     if (this.$isRoot) {
-      console.log('ROOT RENDER');
+
       // initialize all subcomponent runtime context
       initCtx(this);
+
       // excute _render function
       this._render();
     }
@@ -93,8 +94,9 @@ export default function(Van) {
   };
 
   Van.prototype._render = function() {
-    // 首先渲染子组件
-    // 再渲染自己
+
+    // render subcomponent first
+    // then render self
     var self = this;
     for (var key in self.$components) {
       if (this.$components.hasOwnProperty(key)) {
@@ -110,13 +112,13 @@ export default function(Van) {
   // clear rect
   Van.prototype.clearRect = function() {
     var ctx = this.$ctx;
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
   };
 
   // re render
   Van.prototype.reRender = function() {
-
-    if (this.isRoot) {
+    console.log(this.name + 'WILL RE RENDER');
+    if (this.$isRoot) {
       console.log(this.name + 'RE RENDER');
       this.clearRect();
       this._render();
@@ -128,7 +130,7 @@ export default function(Van) {
   };
 
   Van.prototype.newInstance = function() {
-    // 获得参数
+    // get param
     var param = arguments[0];
     var instance = Van.component(this.$options);
     instance.$isInstance = true;
