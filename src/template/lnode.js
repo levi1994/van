@@ -6,7 +6,7 @@ class LNode {
     this.template = node.nodeValue;
 
     // 解析node
-    // 1.解析所有value
+    // 1.resovle all value
     let reg = /{{(\w)+(\.\w*)*}}/g;
     let nodeValue = node.nodeValue;
     if (!nodeValue) return;
@@ -17,6 +17,7 @@ class LNode {
       this.values.push(ar);
     }
   }
+
   // 刷新页面
   reflush() {
     let str = this.template;

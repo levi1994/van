@@ -1,7 +1,7 @@
 var webpack = require('webpack');
 
 var conf = {
-  devtool: 'eval-source-map',
+  devtool: '#source-map',
   entry: './src/index.js',
   output: {
     filename: 'bundle.js',

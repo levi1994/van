@@ -1,5 +1,5 @@
-import Levans from './instance/levans';
+import Van from './instance/Van';
 
-window.Levans = Levans;
+window.Van = Van;
 
-export default Levans;
+export default Van;
