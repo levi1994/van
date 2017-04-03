@@ -23,21 +23,13 @@ export default function(Van) {
     this.beforeRender = options.beforeRender ? options.beforeRender : this.beforeRender;
     this.afterRender = options.afterRender ? options.afterRender : this.afterRender;
     this.created = options.created ? options.created : function() {};
-    this.components = options.components ? options.components : {};
+    this.$components = options.components ? options.components : {};
 
     // generate a uid
     this._uid = uid++;
 
     // convert data to response data
     this.data = this._initData(this, options.data, true);
-
-    // after initialization is complete , excute the created
-    // method for all components
-    for (var key in this.components) {
-      if (this.components.hasOwnProperty(key)) {
-        this.components[key].created(this.components[key]);
-      }
-    }
 
     if (this.$isRoot) {
       console.log('ROOT RENDER');
@@ -104,9 +96,9 @@ export default function(Van) {
     // 首先渲染子组件
     // 再渲染自己
     var self = this;
-    for (var key in self.components) {
-      if (this.components.hasOwnProperty(key)) {
-        var component = self.components[key];
+    for (var key in self.$components) {
+      if (this.$components.hasOwnProperty(key)) {
+        var component = self.$components[key];
         component._render();
       }
     }
@@ -117,7 +109,7 @@ export default function(Van) {
 
   // clear rect
   Van.prototype.clearRect = function() {
-    var ctx = this.ctx;
+    var ctx = this.$ctx;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   };
 
@@ -129,8 +121,8 @@ export default function(Van) {
       this.clearRect();
       this._render();
     } else {
-      if (this.parent) {
-        this.parent.reRender();
+      if (this.$parent) {
+        this.$parent.reRender();
       }
     }
   };
@@ -139,7 +131,7 @@ export default function(Van) {
     // 获得参数
     var param = arguments[0];
     var instance = Van.component(this.$options);
-    instance.isInstance = true;
+    instance.$isInstance = true;
     if (!param) {
       return instance;
     }

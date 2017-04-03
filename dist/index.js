@@ -9,8 +9,6 @@ var Rectangle = Van.component({
   },
   render: function(){
     console.log("circle2 render");
-    var context = this.ctx;
-    var data = this.data;
     this.$ctx.beginPath();
     this.$ctx.fillStyle = "green";
     this.$ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -35,21 +33,14 @@ var Circle = Van.component({
   },
   render: function(){
     console.log("circle2 render");
-    var context = this.ctx;
-    var data = this.data;
   	this.$ctx.beginPath();
-
     console.log(this.data.x);
     console.log(this.data.y);
     this.$ctx.arc(this.data.x,this.data.y,30,0,Math.PI*2,true);
   	this.$ctx.fill();
   },
   created: function(){
-    // var self = this;
-    // console.log(self);
-    // setInterval(function(){
-    //   self.x = self.x + self.speed;
-    // },10);
+
   },
   beforeRender: function(){
     console.log(this.name+" render before");

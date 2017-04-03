@@ -116,17 +116,11 @@
 	    this.beforeRender = options.beforeRender ? options.beforeRender : this.beforeRender;
 	    this.afterRender = options.afterRender ? options.afterRender : this.afterRender;
 	    this.created = options.created ? options.created : function () {};
-	    this.components = options.components ? options.components : {};
+	    this.$components = options.components ? options.components : {};
 	
 	    this._uid = uid++;
 	
 	    this.data = this._initData(this, options.data, true);
-	
-	    for (var key in this.components) {
-	      if (this.components.hasOwnProperty(key)) {
-	        this.components[key].created(this.components[key]);
-	      }
-	    }
 	
 	    if (this.$isRoot) {
 	      console.log('ROOT RENDER');
@@ -193,9 +187,9 @@
 	
 	  Van.prototype._render = function () {
 	    var self = this;
-	    for (var key in self.components) {
-	      if (this.components.hasOwnProperty(key)) {
-	        var component = self.components[key];
+	    for (var key in self.$components) {
+	      if (this.$components.hasOwnProperty(key)) {
+	        var component = self.$components[key];
 	        component._render();
 	      }
 	    }
@@ -205,7 +199,7 @@
 	  };
 	
 	  Van.prototype.clearRect = function () {
-	    var ctx = this.ctx;
+	    var ctx = this.$ctx;
 	    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	  };
 	
@@ -216,8 +210,8 @@
 	      this.clearRect();
 	      this._render();
 	    } else {
-	      if (this.parent) {
-	        this.parent.reRender();
+	      if (this.$parent) {
+	        this.$parent.reRender();
 	      }
 	    }
 	  };
@@ -225,7 +219,7 @@
 	  Van.prototype.newInstance = function () {
 	    var param = arguments[0];
 	    var instance = Van.component(this.$options);
-	    instance.isInstance = true;
+	    instance.$isInstance = true;
 	    if (!param) {
 	      return instance;
 	    }
@@ -263,10 +257,10 @@
 	var isArray = exports.isArray = Array.isArray;
 	
 	function initCtx(van) {
-	  var comps = van.components;
+	  var comps = van.$components;
 	  for (var key in comps) {
 	    if (comps.hasOwnProperty(key)) {
-	      comps[key].parent = van;
+	      comps[key].$parent = van;
 	      comps[key].$ctx = van.$ctx;
 	      initCtx(comps[key]);
 	    }
