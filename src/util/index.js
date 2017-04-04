@@ -4,6 +4,8 @@ export function isObject(obj) {
 
 export const isArray = Array.isArray;
 
+// Recursively set the runtime environment
+// for component and subcomponent
 export function initCtx(van) {
   var comps = van.$components;
   for (var key in comps) {

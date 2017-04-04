@@ -28,9 +28,9 @@
   "parser": "babel-eslint",
 
   "rules": {
-    "accessor-pairs": 2, 
+    "accessor-pairs": 2,
     "arrow-parens": [2, "as-needed"],
-    "arrow-spacing": [2, { "before": true, "after": true }], 
+    "arrow-spacing": [2, { "before": true, "after": true }],
     "block-spacing": [2, "always"],
     "brace-style": [2, "1tbs", { "allowSingleLine": true }],
     "comma-dangle": [2, "never"],
@@ -104,7 +104,7 @@
     "no-this-before-super": 2,
     "no-throw-literal": 2,
     "no-trailing-spaces": 2,
-    "no-undef": 2,
+    # "no-undef": 2,
     "no-undef-init": 2,
     "no-unexpected-multiline": 2,
     "no-unneeded-ternary": [2, { "defaultAssignment": false }],

@@ -78,6 +78,18 @@
 	
 	var _global2 = _interopRequireDefault(_global);
 	
+	var _draw = __webpack_require__(5);
+	
+	var _draw2 = _interopRequireDefault(_draw);
+	
+	var _lifecycle = __webpack_require__(6);
+	
+	var _lifecycle2 = _interopRequireDefault(_lifecycle);
+	
+	var _component = __webpack_require__(7);
+	
+	var _component2 = _interopRequireDefault(_component);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function Van(options) {
@@ -86,6 +98,9 @@
 	
 	(0, _init2.default)(Van);
 	(0, _global2.default)(Van);
+	(0, _lifecycle2.default)(Van);
+	(0, _component2.default)(Van);
+	(0, _draw2.default)(Van);
 	
 	exports.default = Van;
 
@@ -123,8 +138,6 @@
 	    this.data = this._initData(this, options.data, true);
 	
 	    if (this.$isRoot) {
-	      console.log('ROOT RENDER');
-	
 	      (0, _index.initCtx)(this);
 	
 	      this._render();
@@ -180,56 +193,6 @@
 	    }
 	    return responseObj;
 	  };
-	
-	  Van.prototype.render = function () {
-	    console.log('START RENDER');
-	  };
-	
-	  Van.prototype._render = function () {
-	    var self = this;
-	    for (var key in self.$components) {
-	      if (this.$components.hasOwnProperty(key)) {
-	        var component = self.$components[key];
-	        component._render();
-	      }
-	    }
-	    this.beforeRender();
-	    this.render();
-	    this.afterRender();
-	  };
-	
-	  Van.prototype.clearRect = function () {
-	    var ctx = this.$ctx;
-	    ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
-	  };
-	
-	  Van.prototype.reRender = function () {
-	    console.log(this.name + 'WILL RE RENDER');
-	    if (this.$isRoot) {
-	      console.log(this.name + 'RE RENDER');
-	      this.clearRect();
-	      this._render();
-	    } else {
-	      if (this.$parent) {
-	        this.$parent.reRender();
-	      }
-	    }
-	  };
-	
-	  Van.prototype.newInstance = function () {
-	    var param = arguments[0];
-	    var instance = Van.component(this.$options);
-	    instance.$isInstance = true;
-	    if (!param) {
-	      return instance;
-	    }
-	    if (typeof param === 'function') {
-	      param.call(instance);
-	    } else {
-	      instance.data = param;
-	    }
-	    return instance;
-	  };
 	};
 	
 	var _index = __webpack_require__(3);
@@ -281,6 +244,96 @@
 	  Van.component = function (options) {
 	    var van = new Van(options);
 	    return van;
+	  };
+	};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.prototype.$clearRect = function () {
+	    var ctx = this.$ctx;
+	    ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
+	  };
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.prototype.render = function () {
+	    console.log('DEFULT RENDER FUNCTION');
+	  };
+	
+	  Van.prototype._render = function () {
+	    var self = this;
+	    for (var key in self.$components) {
+	      if (this.$components.hasOwnProperty(key)) {
+	        var component = self.$components[key];
+	        component._render();
+	      }
+	    }
+	
+	    this.beforeRender();
+	
+	    this.render();
+	
+	    this.afterRender();
+	  };
+	
+	  Van.prototype.reRender = function () {
+	    console.log(this.name + 'WILL RE RENDER');
+	    if (this.$isRoot) {
+	      console.log(this.name + 'RE RENDER');
+	      this.$clearRect();
+	      this._render();
+	    } else {
+	      if (this.$parent) {
+	        this.$parent.reRender();
+	      }
+	    }
+	  };
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.prototype.newInstance = function () {
+	    var param = arguments[0];
+	    var instance = Van.component(this.$options);
+	    instance.$isInstance = true;
+	    if (!param) {
+	      return instance;
+	    }
+	
+	    if (typeof param === 'function') {
+	      param.call(instance);
+	    } else {
+	      instance.data = param;
+	    }
+	    return instance;
 	  };
 	};
 
