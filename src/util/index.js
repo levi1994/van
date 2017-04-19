@@ -16,3 +16,8 @@ export function initCtx(van) {
     }
   }
 }
+
+// merge two object
+export function merge(obj1, obj2) {
+  
+}

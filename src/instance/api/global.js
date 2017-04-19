@@ -43,4 +43,23 @@ export default function(Van) {
     }
   });
 
+  // Line
+  Van.Line = Van.component({
+    data: {
+      x1: 0,
+      y1: 0,
+      x2: 0,
+      y2: 0,
+      color: 'black',
+      lineWidth: 1
+    },
+    render: function() {
+      this.$ctx.beginPath();
+      this.$ctx.strokeStyle = this.data.color;
+      this.$ctx.moveTo(this.data.x1, this.data.y1);
+      this.$ctx.lineTo(this.data.x2, this.data.y2);
+      this.$ctx.stroke();
+    }
+  });
+
 }

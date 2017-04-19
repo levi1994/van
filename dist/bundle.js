@@ -133,6 +133,12 @@
 	    this.created = options.created ? options.created : function () {};
 	    this.$components = options.components ? options.components : {};
 	
+	    if (options.methods) {
+	      for (var key in options.methods) {
+	        this[key] = options.methods[key];
+	      }
+	    }
+	
 	    this._uid = uid++;
 	
 	    this.data = this._initData(this, options.data, true);
@@ -275,6 +281,24 @@
 	    },
 	    components: {}
 	  });
+	
+	  Van.Line = Van.component({
+	    data: {
+	      x1: 0,
+	      y1: 0,
+	      x2: 0,
+	      y2: 0,
+	      color: 'black',
+	      lineWidth: 1
+	    },
+	    render: function render() {
+	      this.$ctx.beginPath();
+	      this.$ctx.strokeStyle = this.data.color;
+	      this.$ctx.moveTo(this.data.x1, this.data.y1);
+	      this.$ctx.lineTo(this.data.x2, this.data.y2);
+	      this.$ctx.stroke();
+	    }
+	  });
 	};
 
 /***/ },
@@ -305,8 +329,17 @@
 	});
 	
 	exports.default = function (Van) {
-	  Van.prototype.render = function () {
-	    console.log('DEFULT RENDER FUNCTION');
+	
+	  Van.prototype._beforeRender = function () {
+	    if (this.beforeRender) {
+	      this.beforeRender();
+	    }
+	  };
+	
+	  Van.prototype._afterRender = function () {
+	    if (this.afterRender) {
+	      this.afterRender();
+	    }
 	  };
 	
 	  Van.prototype._render = function () {
@@ -318,15 +351,18 @@
 	      }
 	    }
 	
-	    this.beforeRender();
+	    this._beforeRender();
 	
-	    this.render();
+	    if (this.render) {
+	      this.render();
+	    }
 	
-	    this.afterRender();
+	    this._afterRender();
 	  };
 	
 	  Van.prototype.reRender = function () {
 	    console.log(this.name + 'WILL RE RENDER');
+	    console.log(this);
 	    if (this.$isRoot) {
 	      console.log(this.name + 'RE RENDER');
 	      this.$clearRect();

@@ -25,6 +25,13 @@ export default function(Van) {
     this.created = options.created ? options.created : function() {};
     this.$components = options.components ? options.components : {};
 
+    // initialize mehtods
+    if (options.methods) {
+      for (var key in options.methods) {
+        this[key] = options.methods[key];
+      }
+    }
+
     // generate a uid
     this._uid = uid++;
 

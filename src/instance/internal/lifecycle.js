@@ -1,8 +1,15 @@
 export default function(Van) {
 
-  // default render function
-  Van.prototype.render = function() {
-    console.log('DEFULT RENDER FUNCTION');
+  Van.prototype._beforeRender = function() {
+    if (this.beforeRender) {
+      this.beforeRender();
+    }
+  };
+
+  Van.prototype._afterRender = function() {
+    if (this.afterRender) {
+      this.afterRender();
+    }
   };
 
   Van.prototype._render = function() {
@@ -18,18 +25,21 @@ export default function(Van) {
     }
 
     // excute beforeRender function
-    this.beforeRender();
+    this._beforeRender();
 
     // render
-    this.render();
+    if (this.render) {
+      this.render();
+    }
 
     // excute afterRender function
-    this.afterRender();
+    this._afterRender();
   };
 
   // re render
   Van.prototype.reRender = function() {
     console.log(this.name + 'WILL RE RENDER');
+    console.log(this);
     if (this.$isRoot) {
       console.log(this.name + 'RE RENDER');
       this.$clearRect();

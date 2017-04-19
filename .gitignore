@@ -5,4 +5,6 @@ explorations
 TODOs.md
 dist/*.gz
 dist/*.map
+.sonar/*
+sonar-project.properties
 coverage

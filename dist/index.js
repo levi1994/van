@@ -1,5 +1,19 @@
 var Van = window.Van;
 
+var Mine = new Van({
+  data: {
+
+  },
+  render: function() {
+    this.log('haha-------------------');
+  },
+  methods: {
+    log: function(value) {
+      console.log(value);
+    }
+  }
+});
+
 var van = new Van({
   el: '#canvas',
   data: {
@@ -36,6 +50,14 @@ var van = new Van({
       radius: 20,
       color: '#ccc',
       fill: true
+    }),
+    'mine': Mine.newInstance(),
+    'line': Van.Line.newInstance({
+      x1: 50,
+      y1: 10,
+      x2: 100,
+      y2: 100,
+      name: 'ss'
     })
   }
 });

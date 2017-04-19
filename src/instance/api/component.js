@@ -7,7 +7,18 @@ export default function(Van) {
 
     // get param
     var param = arguments[0];
-    var instance = Van.component(this.$options);
+    var instance;
+
+    // merge param and component data
+    if (typeof param === 'function') {
+      instance = Van.component(this.$options);
+      param.call(instance);
+    } else {
+      // merge data
+      // write here
+      instance.data = param;
+    }
+
     instance.$isInstance = true;
     if (!param) {
       return instance;
