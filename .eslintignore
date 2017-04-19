@@ -1,0 +1,7 @@
+.vscode
+.sonar
+.git
+build
+node_moudles
+dist
+packages
