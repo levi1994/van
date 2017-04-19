@@ -1,3 +1,5 @@
+import {mergeTo} from '../../util/index';
+
 // component related interface
 export default function(Van) {
 
@@ -14,9 +16,8 @@ export default function(Van) {
       instance = Van.component(this.$options);
       param.call(instance);
     } else {
-      // merge data
-      // write here
-      instance.data = param;
+      this.$options = mergeTo(param, this.$options);
+      instance = Van.component(this.$options);
     }
 
     instance.$isInstance = true;

@@ -219,6 +219,7 @@
 	
 	exports.isObject = isObject;
 	exports.initCtx = initCtx;
+	exports.mergeTo = mergeTo;
 	function isObject(obj) {
 	  return obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
 	}
@@ -234,6 +235,14 @@
 	      initCtx(comps[key]);
 	    }
 	  }
+	}
+	
+	function mergeTo(obj1, obj2) {
+	  for (var key in obj1) {
+	    var vo = obj1[key];
+	    obj2[key] = vo;
+	  }
+	  return obj2;
 	}
 
 /***/ },
@@ -263,9 +272,9 @@
 	    },
 	    render: function render() {
 	      this.$ctx.beginPath();
-	      this.$ctx.strokeStyle = this.data.color;
-	      this.$ctx.fillStyle = this.data.color;
-	      this.$ctx.arc(this.data.x, this.data.y, this.data.radius, 0, Math.PI * 2, true);
+	      this.$ctx.strokeStyle = this.color;
+	      this.$ctx.fillStyle = this.color;
+	      this.$ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
 	      if (this.data.fill) {
 	        this.$ctx.fill();
 	      } else {
@@ -293,9 +302,9 @@
 	    },
 	    render: function render() {
 	      this.$ctx.beginPath();
-	      this.$ctx.strokeStyle = this.data.color;
-	      this.$ctx.moveTo(this.data.x1, this.data.y1);
-	      this.$ctx.lineTo(this.data.x2, this.data.y2);
+	      this.$ctx.strokeStyle = this.color;
+	      this.$ctx.moveTo(this.x1, this.y1);
+	      this.$ctx.lineTo(this.x2, this.y2);
 	      this.$ctx.stroke();
 	    }
 	  });
@@ -361,8 +370,6 @@
 	  };
 	
 	  Van.prototype.reRender = function () {
-	    console.log(this.name + 'WILL RE RENDER');
-	    console.log(this);
 	    if (this.$isRoot) {
 	      console.log(this.name + 'RE RENDER');
 	      this.$clearRect();
@@ -377,7 +384,7 @@
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -388,7 +395,16 @@
 	exports.default = function (Van) {
 	  Van.prototype.newInstance = function () {
 	    var param = arguments[0];
-	    var instance = Van.component(this.$options);
+	    var instance;
+	
+	    if (typeof param === 'function') {
+	      instance = Van.component(this.$options);
+	      param.call(instance);
+	    } else {
+	      this.$options = (0, _index.mergeTo)(param, this.$options);
+	      instance = Van.component(this.$options);
+	    }
+	
 	    instance.$isInstance = true;
 	    if (!param) {
 	      return instance;
@@ -402,6 +418,8 @@
 	    return instance;
 	  };
 	};
+	
+	var _index = __webpack_require__(3);
 
 /***/ }
 /******/ ]);

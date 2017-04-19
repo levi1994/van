@@ -20,9 +20,9 @@ export default function(Van) {
     },
     render: function() {
       this.$ctx.beginPath();
-      this.$ctx.strokeStyle = this.data.color;
-      this.$ctx.fillStyle = this.data.color;
-      this.$ctx.arc(this.data.x, this.data.y, this.data.radius, 0, Math.PI * 2, true);
+      this.$ctx.strokeStyle = this.color;
+      this.$ctx.fillStyle = this.color;
+      this.$ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
       if (this.data.fill) {
         this.$ctx.fill();
       } else {
@@ -55,9 +55,9 @@ export default function(Van) {
     },
     render: function() {
       this.$ctx.beginPath();
-      this.$ctx.strokeStyle = this.data.color;
-      this.$ctx.moveTo(this.data.x1, this.data.y1);
-      this.$ctx.lineTo(this.data.x2, this.data.y2);
+      this.$ctx.strokeStyle = this.color;
+      this.$ctx.moveTo(this.x1, this.y1);
+      this.$ctx.lineTo(this.x2, this.y2);
       this.$ctx.stroke();
     }
   });

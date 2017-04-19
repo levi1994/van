@@ -18,6 +18,10 @@ export function initCtx(van) {
 }
 
 // merge two object
-export function merge(obj1, obj2) {
-  
+export function mergeTo(obj1, obj2) {
+  for (var key in obj1) {
+    var vo = obj1[key];
+    obj2[key] = vo;
+  }
+  return obj2;
 }

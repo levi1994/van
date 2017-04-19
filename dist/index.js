@@ -24,32 +24,32 @@ var van = new Van({
 
   },
   beforeRender: function() {
-    console.log('circle2 before');
+
   },
   afterRender: function() {
-    console.log('circle2 after');
+
   },
   // 这里不要再用数组了，使用一个对象
   components: {
     'circle1': Van.Circle.newInstance(function() {
-      this.data.x = 80;
-      this.data.y = 80;
-      this.data.radius = 30;
-      this.data.color = 'red';
+      this.x = 80;
+      this.y = 80;
+      this.radius = 30;
+      this.color = 'red';
       this.name = 'circle1';
     }),
     'circle2': Van.Circle.newInstance(function() {
       this.name = 'circle2';
-      this.data.x = 60;
-      this.data.y = 60;
-      this.data.radius = 20;
+      this.x = 60;
+      this.y = 60;
+      this.radius = 20;
     }),
     'circle3': Van.Circle.newInstance({
       x: 40,
       y: 40,
       radius: 20,
       color: '#ccc',
-      fill: true
+      fill: false
     }),
     'mine': Mine.newInstance(),
     'line': Van.Line.newInstance({

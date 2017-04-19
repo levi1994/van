@@ -38,8 +38,6 @@ export default function(Van) {
 
   // re render
   Van.prototype.reRender = function() {
-    console.log(this.name + 'WILL RE RENDER');
-    console.log(this);
     if (this.$isRoot) {
       console.log(this.name + 'RE RENDER');
       this.$clearRect();
