@@ -507,15 +507,7 @@
 	    }
 	
 	    instance.$isInstance = true;
-	    if (!param) {
-	      return instance;
-	    }
 	
-	    if (typeof param === 'function') {
-	      param.call(instance);
-	    } else {
-	      instance.data = param;
-	    }
 	    return instance;
 	  };
 	};

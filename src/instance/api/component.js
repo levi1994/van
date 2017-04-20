@@ -21,17 +21,7 @@ export default function(Van) {
     }
 
     instance.$isInstance = true;
-    if (!param) {
-      return instance;
-    }
 
-    // if it's a function ,excute it
-    // else if it's a object
-    if (typeof param === 'function') {
-      param.call(instance);
-    } else {
-      instance.data = param;
-    }
     return instance;
   };
 }
