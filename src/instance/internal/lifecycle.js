@@ -38,8 +38,11 @@ export default function(Van) {
 
   // re render
   Van.prototype.reRender = function() {
-    if (this.$isRoot) {
-      console.log(this.name + 'RE RENDER');
+
+    // if this component is root component or
+    // it is off canvas component
+    // render himself
+    if (this.$isRoot || this.$off) {
       this.$clearRect();
       this._render();
     } else {

@@ -15,6 +15,11 @@ export default function(Van) {
       this.$root = this;
     }
 
+    // if it is off component
+    if (options.off) {
+      this.$off = true;
+    }
+
     // place the options property to the object
     this.$options = options;
 

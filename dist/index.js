@@ -1,9 +1,10 @@
 var Van = window.Van;
 
-var Mine = new Van({
+var Mine = Van.component({
   data: {
 
   },
+  off: true,
   render: function() {
     this.log('haha-------------------');
   },
@@ -31,27 +32,29 @@ var van = new Van({
   },
   // 这里不要再用数组了，使用一个对象
   components: {
-    'circle1': Van.Circle.newInstance(function() {
-      this.x = 80;
-      this.y = 80;
-      this.radius = 30;
-      this.color = 'red';
-      this.name = 'circle1';
+    'circle1': Van.Circle.newInstance({
+      x: 80,
+      y: 80,
+      radius: 30,
+      color: 'red',
+      name: 'circle1',
     }),
-    'circle2': Van.Circle.newInstance(function() {
-      this.name = 'circle2';
-      this.x = 60;
-      this.y = 60;
-      this.radius = 20;
+    'circle2': Van.Circle.newInstance({
+      name: 'circle2',
+      x: 60,
+      y: 60,
+      radius: 20
     }),
     'circle3': Van.Circle.newInstance({
       x: 40,
       y: 40,
       radius: 20,
       color: '#ccc',
-      fill: false
+      fill: true,
+      name: 'circle3'
     }),
     'mine': Mine.newInstance(),
+    'mines': Mine.newInstance(),
     'line': Van.Line.newInstance({
       x1: 50,
       y1: 10,

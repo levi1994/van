@@ -4,6 +4,7 @@ export function isObject(obj) {
 
 export const isArray = Array.isArray;
 
+let _offid = 0;
 // Recursively set the runtime environment
 // for component and subcomponent
 export function initCtx(van) {
@@ -11,8 +12,28 @@ export function initCtx(van) {
   for (var key in comps) {
     if (comps.hasOwnProperty(key)) {
       comps[key].$parent = van;
-      comps[key].$ctx = van.$ctx;
-      initCtx(comps[key]);
+
+      // if it is off canvas component,
+      // create a canvas element
+      if (comps[key].$off) {
+        var rootCanvas = van.$canvas;
+
+        // create a canvas element after root canvas
+        var offCanvas = document.createElement('canvas');
+        offCanvas.id = key + _offid++;
+        rootCanvas.after(offCanvas);
+        offCanvas.style.position = 'absolute';
+        offCanvas.style.left = 0;
+        offCanvas.style.top = 0;
+        offCanvas.width = rootCanvas.width;
+        offCanvas.height = rootCanvas.height;
+        comps[key].$canvas = offCanvas;
+        comps[key].$ctx = offCanvas.getContext('2d');
+      } else {
+        comps[key].$ctx = van.$ctx;
+        comps[key].$canvas = van.$canvas;
+        initCtx(comps[key]);
+      }
     }
   }
 }
@@ -91,4 +112,19 @@ export function once(fn) {
       fn.apply(this, arguments);
     }
   };
+}
+
+/**
+  * Show tip message
+  */
+let debug = true;
+export function closeDebug() {
+  debug = false;
+}
+
+export function tip(message, type) {
+  if (!debug) {
+    return;
+  }
+  console.log(message);
 }

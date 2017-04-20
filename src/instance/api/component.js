@@ -16,7 +16,7 @@ export default function(Van) {
       instance = Van.component(this.$options);
       param.call(instance);
     } else {
-      this.$options = mergeTo(param, this.$options);
+      this.$options.data = mergeTo(param, this.$options.data);
       instance = Van.component(this.$options);
     }
 

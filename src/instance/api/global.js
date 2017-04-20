@@ -18,6 +18,7 @@ export default function(Van) {
       fill: false,
       name: 'circle'
     },
+    off: true,
     render: function() {
       this.$ctx.beginPath();
       this.$ctx.strokeStyle = this.color;
@@ -30,7 +31,7 @@ export default function(Van) {
       }
     },
     created: function() {
-      // var self = this;
+
     },
     beforeRender: function() {
       console.log(this.name + ' render before');
@@ -61,5 +62,26 @@ export default function(Van) {
       this.$ctx.stroke();
     }
   });
+
+  // Text
+  Van.Text = Van.component({
+    data: {
+
+    },
+    render: function() {
+
+    }
+  });
+
+  // Image
+  Van.Image = Van.component({
+    data: {
+
+    },
+    render: function() {
+
+    }
+  });
+
 
 }

@@ -125,6 +125,10 @@
 	      this.$root = this;
 	    }
 	
+	    if (options.off) {
+	      this.$off = true;
+	    }
+	
 	    this.$options = options;
 	
 	    this.render = options.render ? options.render : this.render;
@@ -220,29 +224,116 @@
 	exports.isObject = isObject;
 	exports.initCtx = initCtx;
 	exports.mergeTo = mergeTo;
+	exports.isUndef = isUndef;
+	exports.isDef = isDef;
+	exports.isTrue = isTrue;
+	exports.isPrimitive = isPrimitive;
+	exports.isPlainObject = isPlainObject;
+	exports.bind = bind;
+	exports.extend = extend;
+	exports.once = once;
+	exports.closeDebug = closeDebug;
+	exports.tip = tip;
 	function isObject(obj) {
 	  return obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
 	}
 	
 	var isArray = exports.isArray = Array.isArray;
 	
+	var _offid = 0;
 	function initCtx(van) {
 	  var comps = van.$components;
 	  for (var key in comps) {
 	    if (comps.hasOwnProperty(key)) {
 	      comps[key].$parent = van;
-	      comps[key].$ctx = van.$ctx;
-	      initCtx(comps[key]);
+	
+	      if (comps[key].$off) {
+	        var rootCanvas = van.$canvas;
+	
+	        var offCanvas = document.createElement('canvas');
+	        offCanvas.id = key + _offid++;
+	        rootCanvas.after(offCanvas);
+	        offCanvas.style.position = 'absolute';
+	        offCanvas.style.left = 0;
+	        offCanvas.style.top = 0;
+	        offCanvas.width = rootCanvas.width;
+	        offCanvas.height = rootCanvas.height;
+	        comps[key].$canvas = offCanvas;
+	        comps[key].$ctx = offCanvas.getContext('2d');
+	      } else {
+	        comps[key].$ctx = van.$ctx;
+	        comps[key].$canvas = van.$canvas;
+	        initCtx(comps[key]);
+	      }
 	    }
 	  }
 	}
 	
-	function mergeTo(obj1, obj2) {
-	  for (var key in obj1) {
-	    var vo = obj1[key];
-	    obj2[key] = vo;
+	function mergeTo(from, to) {
+	  for (var key in from) {
+	    var vo = from[key];
+	    to[key] = vo;
 	  }
-	  return obj2;
+	  return to;
+	}
+	
+	function isUndef(v) {
+	  return v === undefined || v === null;
+	}
+	
+	function isDef(v) {
+	  return v !== undefined && v !== null;
+	}
+	
+	function isTrue(v) {
+	  return v === true;
+	}
+	
+	function isPrimitive(value) {
+	  return typeof value === 'string' || typeof value === 'number';
+	}
+	
+	function isPlainObject(obj) {
+	  return Object.prototype.toString.call(obj) === '[object Object]';
+	}
+	
+	function bind(fn, ctx) {
+	  function boundFn(a) {
+	    var l = arguments.length;
+	    return l ? l > 1 ? fn.apply(ctx, arguments) : fn.call(ctx, a) : fn.call(ctx);
+	  }
+	
+	  boundFn._length = fn.length;
+	  return boundFn;
+	}
+	
+	function extend(to, _from) {
+	  for (var key in _from) {
+	    to[key] = _from[key];
+	  }
+	  return to;
+	}
+	
+	function once(fn) {
+	  var called = false;
+	  return function () {
+	    if (!called) {
+	      called = true;
+	      fn.apply(this, arguments);
+	    }
+	  };
+	}
+	
+	var debug = true;
+	function closeDebug() {
+	  debug = false;
+	}
+	
+	function tip(message, type) {
+	  if (!debug) {
+	    return;
+	  }
+	  console.log(message);
 	}
 
 /***/ },
@@ -270,6 +361,7 @@
 	      fill: false,
 	      name: 'circle'
 	    },
+	    off: true,
 	    render: function render() {
 	      this.$ctx.beginPath();
 	      this.$ctx.strokeStyle = this.color;
@@ -308,6 +400,16 @@
 	      this.$ctx.stroke();
 	    }
 	  });
+	
+	  Van.Text = Van.component({
+	    data: {},
+	    render: function render() {}
+	  });
+	
+	  Van.Image = Van.component({
+	    data: {},
+	    render: function render() {}
+	  });
 	};
 
 /***/ },
@@ -331,7 +433,7 @@
 /* 6 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -370,8 +472,7 @@
 	  };
 	
 	  Van.prototype.reRender = function () {
-	    if (this.$isRoot) {
-	      console.log(this.name + 'RE RENDER');
+	    if (this.$isRoot || this.$off) {
 	      this.$clearRect();
 	      this._render();
 	    } else {
@@ -401,7 +502,7 @@
 	      instance = Van.component(this.$options);
 	      param.call(instance);
 	    } else {
-	      this.$options = (0, _index.mergeTo)(param, this.$options);
+	      this.$options.data = (0, _index.mergeTo)(param, this.$options.data);
 	      instance = Van.component(this.$options);
 	    }
 	
