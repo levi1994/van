@@ -12,6 +12,16 @@ var Mine = Van.component({
     log: function(value) {
       console.log(value);
     }
+  },
+  components: {
+    'mineCircle': Van.Circle.newInstance({
+      x: 40,
+      y: 40,
+      radius: 20,
+      color: '#ccc',
+      fill: true,
+      name: 'mineCircle'
+    }),
   }
 });
 

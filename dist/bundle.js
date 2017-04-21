@@ -56,6 +56,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	_Van2.default.version = '0.1.1';
+	
 	window.Van = _Van2.default;
 	
 	exports.default = _Van2.default;
@@ -74,21 +76,21 @@
 	
 	var _init2 = _interopRequireDefault(_init);
 	
-	var _global = __webpack_require__(4);
-	
-	var _global2 = _interopRequireDefault(_global);
-	
-	var _draw = __webpack_require__(5);
+	var _draw = __webpack_require__(4);
 	
 	var _draw2 = _interopRequireDefault(_draw);
 	
-	var _lifecycle = __webpack_require__(6);
+	var _lifecycle = __webpack_require__(5);
 	
 	var _lifecycle2 = _interopRequireDefault(_lifecycle);
 	
-	var _component = __webpack_require__(7);
+	var _component = __webpack_require__(6);
 	
 	var _component2 = _interopRequireDefault(_component);
+	
+	var _index = __webpack_require__(7);
+	
+	var _index2 = _interopRequireDefault(_index);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -97,10 +99,11 @@
 	}
 	
 	(0, _init2.default)(Van);
-	(0, _global2.default)(Van);
+	
 	(0, _lifecycle2.default)(Van);
 	(0, _component2.default)(Van);
 	(0, _draw2.default)(Van);
+	(0, _index2.default)(Van);
 	
 	exports.default = Van;
 
@@ -251,13 +254,19 @@
 	        var rootCanvas = van.$canvas;
 	
 	        var offCanvas = document.createElement('canvas');
-	        offCanvas.id = key + _offid++;
+	        var _cid = _offid++;
+	
+	        offCanvas.id = key + _cid;
+	        offCanvas.setAttribute('_cid', _cid);
+	
 	        rootCanvas.after(offCanvas);
+	
 	        offCanvas.style.position = 'absolute';
 	        offCanvas.style.left = 0;
 	        offCanvas.style.top = 0;
 	        offCanvas.width = rootCanvas.width;
 	        offCanvas.height = rootCanvas.height;
+	
 	        comps[key].$canvas = offCanvas;
 	        comps[key].$ctx = offCanvas.getContext('2d');
 	      } else {
@@ -340,6 +349,77 @@
 /* 4 */
 /***/ function(module, exports) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.prototype.$clearRect = function () {
+	    var ctx = this.$ctx;
+	    ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
+	  };
+	};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	
+	  Van.prototype._beforeRender = function () {
+	    if (this.beforeRender) {
+	      this.beforeRender();
+	    }
+	  };
+	
+	  Van.prototype._afterRender = function () {
+	    if (this.afterRender) {
+	      this.afterRender();
+	    }
+	  };
+	
+	  Van.prototype._render = function () {
+	    var self = this;
+	    for (var key in self.$components) {
+	      if (this.$components.hasOwnProperty(key)) {
+	        var component = self.$components[key];
+	        component._render();
+	      }
+	    }
+	
+	    this._beforeRender();
+	
+	    if (this.render) {
+	      this.render();
+	    }
+	
+	    this._afterRender();
+	  };
+	
+	  Van.prototype.reRender = function () {
+	    if (this.$isRoot || this.$off) {
+	      this.$clearRect();
+	      this._render();
+	    } else {
+	      if (this.$parent) {
+	        this.$parent.reRender();
+	      }
+	    }
+	  };
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -348,10 +428,66 @@
 	
 	exports.default = function (Van) {
 	  Van.component = function (options) {
-	    var van = new Van(options);
-	    return van;
+	    var comp = new Component(options);
+	    return comp;
 	  };
 	
+	  function Component(options) {
+	    this.options = options;
+	    return this;
+	  }
+	
+	  Component.prototype.newInstance = function (args) {
+	    var instance;
+	
+	    var options = (0, _index.mergeTo)(this.options, {});
+	
+	    if (typeof args === 'function') {
+	      instance = new Van(options);
+	      args.call(instance);
+	    } else {
+	      options.data = (0, _index.mergeTo)(args, options.data);
+	      instance = new Van(options);
+	    }
+	
+	    instance.$isInstance = true;
+	
+	    return instance;
+	  };
+	
+	  Component.prototype.newOffInstance = function (args) {
+	    var instance;
+	
+	    var options = (0, _index.mergeTo)(this.options, {});
+	    options.off = true;
+	
+	    if (typeof args === 'function') {
+	      instance = new Van(options);
+	      args.call(instance);
+	    } else {
+	      options.data = (0, _index.mergeTo)(args, options.data);
+	      instance = new Van(options);
+	    }
+	
+	    instance.$isInstance = true;
+	
+	    return instance;
+	  };
+	};
+	
+	var _index = __webpack_require__(3);
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
 	  Van.Circle = Van.component({
 	    data: {
 	      x: 50,
@@ -410,128 +546,6 @@
 	    render: function render() {}
 	  });
 	};
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function (Van) {
-	  Van.prototype.$clearRect = function () {
-	    var ctx = this.$ctx;
-	    ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
-	  };
-	};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function (Van) {
-	
-	  Van.prototype._beforeRender = function () {
-	    if (this.beforeRender) {
-	      this.beforeRender();
-	    }
-	  };
-	
-	  Van.prototype._afterRender = function () {
-	    if (this.afterRender) {
-	      this.afterRender();
-	    }
-	  };
-	
-	  Van.prototype._render = function () {
-	    var self = this;
-	    for (var key in self.$components) {
-	      if (this.$components.hasOwnProperty(key)) {
-	        var component = self.$components[key];
-	        component._render();
-	      }
-	    }
-	
-	    this._beforeRender();
-	
-	    if (this.render) {
-	      this.render();
-	    }
-	
-	    this._afterRender();
-	  };
-	
-	  Van.prototype.reRender = function () {
-	    if (this.$isRoot || this.$off) {
-	      this.$clearRect();
-	      this._render();
-	    } else {
-	      if (this.$parent) {
-	        this.$parent.reRender();
-	      }
-	    }
-	  };
-	};
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	exports.default = function (Van) {
-	    Van.prototype.newInstance = function (args) {
-	        var instance;
-	
-	        var options = (0, _index.mergeTo)(this.$options, {});
-	
-	        if (typeof args === 'function') {
-	            instance = Van.component(options);
-	            args.call(instance);
-	        } else {
-	            options.data = (0, _index.mergeTo)(args, options.data);
-	            instance = Van.component(options);
-	        }
-	
-	        instance.$isInstance = true;
-	
-	        return instance;
-	    };
-	
-	    Van.prototype.newOffInstance = function (args) {
-	        var instance;
-	
-	        var options = (0, _index.mergeTo)(this.$options, {});
-	        options.off = true;
-	
-	        if (typeof args === 'function') {
-	            instance = Van.component(options);
-	            args.call(instance);
-	        } else {
-	            options.data = (0, _index.mergeTo)(args, options.data);
-	            instance = Van.component(options);
-	        }
-	
-	        instance.$isInstance = true;
-	
-	        return instance;
-	    };
-	};
-	
-	var _index = __webpack_require__(3);
 
 /***/ }
 /******/ ]);
