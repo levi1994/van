@@ -18,7 +18,6 @@ export default function(Van) {
       fill: false,
       name: 'circle'
     },
-    off: true,
     render: function() {
       this.$ctx.beginPath();
       this.$ctx.strokeStyle = this.color;

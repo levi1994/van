@@ -361,7 +361,6 @@
 	      fill: false,
 	      name: 'circle'
 	    },
-	    off: true,
 	    render: function render() {
 	      this.$ctx.beginPath();
 	      this.$ctx.strokeStyle = this.color;
@@ -490,26 +489,46 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	
 	exports.default = function (Van) {
-	  Van.prototype.newInstance = function () {
-	    var param = arguments[0];
-	    var instance;
+	    Van.prototype.newInstance = function (args) {
+	        var instance;
 	
-	    if (typeof param === 'function') {
-	      instance = Van.component(this.$options);
-	      param.call(instance);
-	    } else {
-	      this.$options.data = (0, _index.mergeTo)(param, this.$options.data);
-	      instance = Van.component(this.$options);
-	    }
+	        var options = (0, _index.mergeTo)(this.$options, {});
 	
-	    instance.$isInstance = true;
+	        if (typeof args === 'function') {
+	            instance = Van.component(options);
+	            args.call(instance);
+	        } else {
+	            options.data = (0, _index.mergeTo)(args, options.data);
+	            instance = Van.component(options);
+	        }
 	
-	    return instance;
-	  };
+	        instance.$isInstance = true;
+	
+	        return instance;
+	    };
+	
+	    Van.prototype.newOffInstance = function (args) {
+	        var instance;
+	
+	        var options = (0, _index.mergeTo)(this.$options, {});
+	        options.off = true;
+	
+	        if (typeof args === 'function') {
+	            instance = Van.component(options);
+	            args.call(instance);
+	        } else {
+	            options.data = (0, _index.mergeTo)(args, options.data);
+	            instance = Van.component(options);
+	        }
+	
+	        instance.$isInstance = true;
+	
+	        return instance;
+	    };
 	};
 	
 	var _index = __webpack_require__(3);

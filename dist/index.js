@@ -32,7 +32,7 @@ var van = new Van({
   },
   // 这里不要再用数组了，使用一个对象
   components: {
-    'circle1': Van.Circle.newInstance({
+    'circle1': Van.Circle.newOffInstance({
       x: 80,
       y: 80,
       radius: 30,
