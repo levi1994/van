@@ -513,6 +513,46 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  (0, _Circle2.default)(Van);
+	  (0, _Image2.default)(Van);
+	  (0, _Text2.default)(Van);
+	  (0, _Line2.default)(Van);
+	  (0, _Rect2.default)(Van);
+	};
+	
+	var _Circle = __webpack_require__(8);
+	
+	var _Circle2 = _interopRequireDefault(_Circle);
+	
+	var _Image = __webpack_require__(9);
+	
+	var _Image2 = _interopRequireDefault(_Image);
+	
+	var _Text = __webpack_require__(10);
+	
+	var _Text2 = _interopRequireDefault(_Text);
+	
+	var _Line = __webpack_require__(11);
+	
+	var _Line2 = _interopRequireDefault(_Line);
+	
+	var _Rect = __webpack_require__(12);
+	
+	var _Rect2 = _interopRequireDefault(_Rect);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -551,7 +591,53 @@
 	    },
 	    components: {}
 	  });
+	};
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.Image = Van.component({
+	    data: {},
+	    render: function render() {}
+	  });
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.Text = Van.component({
+	    data: {},
+	    render: function render() {}
+	  });
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
 	  Van.Line = Van.component({
 	    data: {
 	      x1: 0,
@@ -569,17 +655,19 @@
 	      this.$ctx.stroke();
 	    }
 	  });
-	
-	  Van.Text = Van.component({
-	    data: {},
-	    render: function render() {}
-	  });
-	
-	  Van.Image = Van.component({
-	    data: {},
-	    render: function render() {}
-	  });
 	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {};
 
 /***/ }
 /******/ ]);
