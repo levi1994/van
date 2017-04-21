@@ -20,13 +20,23 @@ export function initCtx(van) {
 
         // create a canvas element after root canvas
         var offCanvas = document.createElement('canvas');
-        offCanvas.id = key + _offid++;
+        var _cid = _offid++;
+
+        // set component id
+        offCanvas.id = key + _cid;
+        offCanvas.setAttribute('_cid', _cid);
+
+        // insert canvas element into DOM tree
         rootCanvas.after(offCanvas);
+
+        // set off-scrren canvas style
         offCanvas.style.position = 'absolute';
         offCanvas.style.left = 0;
         offCanvas.style.top = 0;
         offCanvas.width = rootCanvas.width;
         offCanvas.height = rootCanvas.height;
+
+        // init component context
         comps[key].$canvas = offCanvas;
         comps[key].$ctx = offCanvas.getContext('2d');
       } else {
