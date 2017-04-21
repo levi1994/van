@@ -118,6 +118,32 @@
 	});
 	
 	exports.default = function (Van) {
+	  Object.defineProperty(Van.prototype, '$ctx', {
+	    configurable: true,
+	    enumerable: true,
+	    get: function get() {
+	      if (!this._ctx) {
+	        return this.$parent.$ctx;
+	      }
+	      return this._ctx;
+	    },
+	    set: function set(value) {
+	      this._ctx = value;
+	    }
+	  });
+	  Object.defineProperty(Van.prototype, '$canvas', {
+	    configurable: true,
+	    enumerable: true,
+	    get: function get() {
+	      if (!this._canvas) {
+	        return this.$parent.$canvas;
+	      }
+	      return this._canvas;
+	    },
+	    set: function set(value) {
+	      this._canvas = value;
+	    }
+	  });
 	  Van.prototype._init = function (options) {
 	    options = options || {};
 	
@@ -232,6 +258,7 @@
 	exports.isTrue = isTrue;
 	exports.isPrimitive = isPrimitive;
 	exports.isPlainObject = isPlainObject;
+	exports.isFunction = isFunction;
 	exports.bind = bind;
 	exports.extend = extend;
 	exports.once = once;
@@ -269,9 +296,8 @@
 	
 	        comps[key].$canvas = offCanvas;
 	        comps[key].$ctx = offCanvas.getContext('2d');
+	        initCtx(comps[key]);
 	      } else {
-	        comps[key].$ctx = van.$ctx;
-	        comps[key].$canvas = van.$canvas;
 	        initCtx(comps[key]);
 	      }
 	    }
@@ -280,8 +306,12 @@
 	
 	function mergeTo(from, to) {
 	  for (var key in from) {
-	    var vo = from[key];
-	    to[key] = vo;
+	    if (key === 'data') {
+	      to[key] = JSON.parse(JSON.stringify(from[key]));
+	    } else {
+	      var vo = from[key];
+	      to[key] = vo;
+	    }
 	  }
 	  return to;
 	}
@@ -304,6 +334,10 @@
 	
 	function isPlainObject(obj) {
 	  return Object.prototype.toString.call(obj) === '[object Object]';
+	}
+	
+	function isFunction(value) {
+	  return typeof value === 'function';
 	}
 	
 	function bind(fn, ctx) {
@@ -440,14 +474,14 @@
 	  Component.prototype.newInstance = function (args) {
 	    var instance;
 	
-	    var options = (0, _index.mergeTo)(this.options, {});
+	    var option = (0, _index.mergeTo)(this.options, {});
 	
 	    if (typeof args === 'function') {
-	      instance = new Van(options);
+	      instance = new Van(option);
 	      args.call(instance);
 	    } else {
-	      options.data = (0, _index.mergeTo)(args, options.data);
-	      instance = new Van(options);
+	      option.data = (0, _index.mergeTo)(args, option.data);
+	      instance = new Van(option);
 	    }
 	
 	    instance.$isInstance = true;
@@ -458,15 +492,15 @@
 	  Component.prototype.newOffInstance = function (args) {
 	    var instance;
 	
-	    var options = (0, _index.mergeTo)(this.options, {});
-	    options.off = true;
+	    var option = (0, _index.mergeTo)(this.options, {});
+	    option.off = true;
 	
 	    if (typeof args === 'function') {
-	      instance = new Van(options);
+	      instance = new Van(option);
 	      args.call(instance);
 	    } else {
-	      options.data = (0, _index.mergeTo)(args, options.data);
-	      instance = new Van(options);
+	      option.data = (0, _index.mergeTo)(args, option.data);
+	      instance = new Van(option);
 	    }
 	
 	    instance.$isInstance = true;

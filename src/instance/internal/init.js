@@ -3,6 +3,32 @@ import {isObject, isArray, arrayUtil, initCtx} from '../../util/index';
 let uid = 0;
 
 export default function(Van) {
+  Object.defineProperty(Van.prototype, '$ctx', {
+    configurable: true,
+    enumerable: true,
+    get: function() {
+      if (!this._ctx) {
+        return this.$parent.$ctx;
+      }
+      return this._ctx;
+    },
+    set: function(value) {
+      this._ctx = value;
+    }
+  });
+  Object.defineProperty(Van.prototype, '$canvas', {
+    configurable: true,
+    enumerable: true,
+    get: function() {
+      if (!this._canvas) {
+        return this.$parent.$canvas;
+      }
+      return this._canvas;
+    },
+    set: function(value) {
+      this._canvas = value;
+    }
+  });
   Van.prototype._init = function(options) {
     options = options || {};
 

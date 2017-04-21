@@ -53,14 +53,16 @@ var van = new Van({
       name: 'circle2',
       x: 60,
       y: 60,
-      radius: 20
+      radius: 20,
+      fill: false,
+      color: 'black'
     }),
     'circle3': Van.Circle.newInstance({
       x: 40,
       y: 40,
       radius: 20,
       color: '#ccc',
-      fill: true,
+      fill: false,
       name: 'circle3'
     }),
     'mine': Mine.newInstance(),

@@ -39,9 +39,10 @@ export function initCtx(van) {
         // init component context
         comps[key].$canvas = offCanvas;
         comps[key].$ctx = offCanvas.getContext('2d');
+        initCtx(comps[key]);
       } else {
-        comps[key].$ctx = van.$ctx;
-        comps[key].$canvas = van.$canvas;
+        // comps[key].$ctx = van.$ctx;
+        // comps[key].$canvas = van.$canvas;
         initCtx(comps[key]);
       }
     }
@@ -51,8 +52,16 @@ export function initCtx(van) {
 // merge two object
 export function mergeTo(from, to) {
   for (var key in from) {
-    var vo = from[key];
-    to[key] = vo;
+
+    // number,string,null,undefined,function,array,
+    // if it is number, function, string, null, undefined
+    if (key === 'data') {
+      to[key] = JSON.parse(JSON.stringify(from[key]));
+    } else {
+      var vo = from[key];
+      to[key] = vo;
+    }
+
   }
   return to;
 }
@@ -82,6 +91,10 @@ export function isPrimitive(value) {
  */
 export function isPlainObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]';
+}
+
+export function isFunction(value) {
+  return typeof value === 'function';
 }
 
 /**
