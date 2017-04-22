@@ -40,11 +40,12 @@ export default function(Van) {
   Van.prototype.reRender = function() {
 
     // if this component is root component or
-    // it is off canvas component
+    // it is off-screen component
     // render himself
     if (this.$isRoot || this.$off) {
       this.$clearRect();
-      this._render();
+      // this._render();
+      this._refresh = true;
     } else {
       if (this.$parent) {
         this.$parent.reRender();

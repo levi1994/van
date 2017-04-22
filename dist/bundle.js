@@ -167,12 +167,14 @@
 	
 	    this.$options = options;
 	
-	    this.render = options.render ? options.render : this.render;
-	    this.beforeRender = options.beforeRender ? options.beforeRender : this.beforeRender;
-	    this.afterRender = options.afterRender ? options.afterRender : this.afterRender;
+	    this.render = options.render || this.render;
+	    this.beforeRender = options.beforeRender || this.beforeRender;
+	    this.afterRender = options.afterRender || this.afterRender;
 	    this.animate = options.animate;
-	    this.created = options.created ? options.created : function () {};
-	    this.$components = options.components ? options.components : {};
+	    this.created = options.created || function () {};
+	    this.$components = options.components || {};
+	
+	    this._refresh = true;
 	
 	    if (options.methods) {
 	      for (var key in options.methods) {
@@ -191,9 +193,18 @@
 	    }
 	
 	    if (this.$isRoot) {
-	      this.animateTimer = setInterval(function () {
+	      this._animateTimer = setInterval(function () {
 	        self._animate();
 	      }, 30);
+	
+	      this._raf = requestAnimationFrame(refresh);
+	    }
+	
+	    function refresh() {
+	      if (self._refresh) {
+	        self._render();
+	      }
+	      requestAnimationFrame(refresh);
 	    }
 	  };
 	
@@ -455,7 +466,8 @@
 	  Van.prototype.reRender = function () {
 	    if (this.$isRoot || this.$off) {
 	      this.$clearRect();
-	      this._render();
+	
+	      this._refresh = true;
 	    } else {
 	      if (this.$parent) {
 	        this.$parent.reRender();
@@ -712,6 +724,7 @@
 	    if (van.animate) {
 	      van.animate();
 	    }
+	
 	    for (var key in van.$components) {
 	      if (van.$components.hasOwnProperty(key)) {
 	        callAnimate(van.$components[key]);

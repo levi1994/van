@@ -52,12 +52,14 @@ export default function(Van) {
     this.$options = options;
 
     // init options
-    this.render = options.render ? options.render : this.render;
-    this.beforeRender = options.beforeRender ? options.beforeRender : this.beforeRender;
-    this.afterRender = options.afterRender ? options.afterRender : this.afterRender;
+    this.render = options.render || this.render;
+    this.beforeRender = options.beforeRender || this.beforeRender;
+    this.afterRender = options.afterRender || this.afterRender;
     this.animate = options.animate;
-    this.created = options.created ? options.created : function() {};
-    this.$components = options.components ? options.components : {};
+    this.created = options.created || function() {};
+    this.$components = options.components || {};
+
+    this._refresh = true;
 
     // initialize mehtods
     if (options.methods) {
@@ -83,9 +85,20 @@ export default function(Van) {
 
     if (this.$isRoot) {
       // animate
-      this.animateTimer = setInterval(function() {
+      this._animateTimer = setInterval(function() {
         self._animate();
       }, 30);
+
+      this._raf = requestAnimationFrame(refresh);
+
+    }
+
+    // call requestAnimationFrame to refresh
+    function refresh() {
+      if (self._refresh) {
+        self._render();
+      }
+      requestAnimationFrame(refresh);
     }
   };
 

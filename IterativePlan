@@ -1,6 +1,10 @@
-methods
-内置组件
-离屏组件
-Animation(ReCompute)
-异步更新队列
-Event
+数据响应式监听(data)    ok
+组件创建(Van.component)    ok
+组件实例化(Component.newInstance)    ok
+methods  ok
+内置组件   ok
+离屏组件   ok
+Animation(ReCompute)    ok
+异步更新队列    ok
+Event(事件机制，主要用于父子组件之间的通信)
+Event(页面事件的监听，主要包括click，mouseover,mouseleave)
