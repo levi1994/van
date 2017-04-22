@@ -30,6 +30,8 @@ export default function(Van) {
     }
   });
   Van.prototype._init = function(options) {
+    var self = this;
+
     options = options || {};
 
     // if options contains el attribute
@@ -53,6 +55,7 @@ export default function(Van) {
     this.render = options.render ? options.render : this.render;
     this.beforeRender = options.beforeRender ? options.beforeRender : this.beforeRender;
     this.afterRender = options.afterRender ? options.afterRender : this.afterRender;
+    this.animate = options.animate;
     this.created = options.created ? options.created : function() {};
     this.$components = options.components ? options.components : {};
 
@@ -76,6 +79,13 @@ export default function(Van) {
 
       // excute _render function
       this._render();
+    }
+
+    if (this.$isRoot) {
+      // animate
+      this.animateTimer = setInterval(function() {
+        self._animate();
+      }, 30);
     }
   };
 

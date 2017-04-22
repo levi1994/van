@@ -6,7 +6,8 @@ export default function(Van) {
       radius: 50,
       color: 'black',
       fill: false,
-      name: 'circle'
+      name: 'circle',
+      flag: true
     },
     render: function() {
       this.$ctx.beginPath();
@@ -19,8 +20,22 @@ export default function(Van) {
         this.$ctx.stroke();
       }
     },
+    animate: function() {
+      console.log('animate');
+      if (this.flag) {
+        this.radius ++;
+        if (this.radius > 100) {
+          this.flag = false;
+        }
+      } else {
+        this.radius --;
+        if (this.radius < 20) {
+          this.flag = true;
+        }
+      }
+    },
     created: function() {
-
+      console.log('created');
     },
     beforeRender: function() {
       console.log(this.name + ' render before');

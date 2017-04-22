@@ -13,6 +13,8 @@ var Mine = Van.component({
       console.log(value);
     }
   },
+  afterRender: function() {
+  },
   components: {
     'mineCircle': Van.Circle.newInstance({
       x: 40,

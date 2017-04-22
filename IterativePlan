@@ -1,5 +1,6 @@
 methods
 内置组件
 离屏组件
-Animation
+Animation(ReCompute)
+异步更新队列
 Event

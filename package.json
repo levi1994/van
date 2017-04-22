@@ -1,6 +1,6 @@
 {
-  "name": "lemo",
-  "version": "0.0.1",
+  "name": "vanjs",
+  "version": "0.0.2",
   "description": "a mvvm framwork",
   "main": "index.js",
   "scripts": {

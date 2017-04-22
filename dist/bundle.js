@@ -92,6 +92,10 @@
 	
 	var _index2 = _interopRequireDefault(_index);
 	
+	var _animation = __webpack_require__(13);
+	
+	var _animation2 = _interopRequireDefault(_animation);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function Van(options) {
@@ -104,6 +108,7 @@
 	(0, _component2.default)(Van);
 	(0, _draw2.default)(Van);
 	(0, _index2.default)(Van);
+	(0, _animation2.default)(Van);
 	
 	exports.default = Van;
 
@@ -145,6 +150,8 @@
 	    }
 	  });
 	  Van.prototype._init = function (options) {
+	    var self = this;
+	
 	    options = options || {};
 	
 	    if (options.el) {
@@ -163,6 +170,7 @@
 	    this.render = options.render ? options.render : this.render;
 	    this.beforeRender = options.beforeRender ? options.beforeRender : this.beforeRender;
 	    this.afterRender = options.afterRender ? options.afterRender : this.afterRender;
+	    this.animate = options.animate;
 	    this.created = options.created ? options.created : function () {};
 	    this.$components = options.components ? options.components : {};
 	
@@ -180,6 +188,14 @@
 	      (0, _index.initCtx)(this);
 	
 	      this._render();
+	    }
+	
+	    if (this.$isRoot) {
+	      console.log('new Interval');
+	
+	      this.animateTimer = setInterval(function () {
+	        self._animate();
+	      }, 30);
 	    }
 	  };
 	
@@ -569,7 +585,8 @@
 	      radius: 50,
 	      color: 'black',
 	      fill: false,
-	      name: 'circle'
+	      name: 'circle',
+	      flag: true
 	    },
 	    render: function render() {
 	      this.$ctx.beginPath();
@@ -582,7 +599,23 @@
 	        this.$ctx.stroke();
 	      }
 	    },
-	    created: function created() {},
+	    animate: function animate() {
+	      console.log('animate');
+	      if (this.flag) {
+	        this.radius++;
+	        if (this.radius > 100) {
+	          this.flag = false;
+	        }
+	      } else {
+	        this.radius--;
+	        if (this.radius < 20) {
+	          this.flag = true;
+	        }
+	      }
+	    },
+	    created: function created() {
+	      console.log('created');
+	    },
 	    beforeRender: function beforeRender() {
 	      console.log(this.name + ' render before');
 	    },
@@ -668,6 +701,33 @@
 	});
 	
 	exports.default = function (Van) {};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.prototype._animate = function () {
+	    callAnimate(this);
+	  };
+	
+	  function callAnimate(van) {
+	    if (van.animate) {
+	      van.animate();
+	    }
+	    for (var key in van.$components) {
+	      if (van.$components.hasOwnProperty(key)) {
+	        callAnimate(van.$components[key]);
+	      }
+	    }
+	  }
+	};
 
 /***/ }
 /******/ ]);
