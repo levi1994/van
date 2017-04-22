@@ -21,7 +21,6 @@ export default function(Van) {
       }
     },
     animate: function() {
-      console.log('animate');
       if (this.flag) {
         this.radius ++;
         if (this.radius > 100) {
@@ -35,13 +34,13 @@ export default function(Van) {
       }
     },
     created: function() {
-      console.log('created');
+      // console.log('created');
     },
     beforeRender: function() {
-      console.log(this.name + ' render before');
+      // console.log(this.name + ' render before');
     },
     afterRender: function() {
-      console.log(this.name + 'render after');
+      // console.log(this.name + 'render after');
     },
     components: {
 

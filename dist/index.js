@@ -6,7 +6,7 @@ var Mine = Van.component({
   },
   off: true,
   render: function() {
-    this.log('haha-------------------');
+    // this.log('haha-------------------');
   },
   methods: {
     log: function(value) {

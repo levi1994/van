@@ -191,8 +191,6 @@
 	    }
 	
 	    if (this.$isRoot) {
-	      console.log('new Interval');
-	
 	      this.animateTimer = setInterval(function () {
 	        self._animate();
 	      }, 30);
@@ -600,7 +598,6 @@
 	      }
 	    },
 	    animate: function animate() {
-	      console.log('animate');
 	      if (this.flag) {
 	        this.radius++;
 	        if (this.radius > 100) {
@@ -613,15 +610,9 @@
 	        }
 	      }
 	    },
-	    created: function created() {
-	      console.log('created');
-	    },
-	    beforeRender: function beforeRender() {
-	      console.log(this.name + ' render before');
-	    },
-	    afterRender: function afterRender() {
-	      console.log(this.name + 'render after');
-	    },
+	    created: function created() {},
+	    beforeRender: function beforeRender() {},
+	    afterRender: function afterRender() {},
 	    components: {}
 	  });
 	};
