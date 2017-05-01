@@ -107,7 +107,6 @@
 	}
 	
 	(0, _init2.default)(Van);
-	
 	(0, _lifecycle2.default)(Van);
 	(0, _component2.default)(Van);
 	(0, _draw2.default)(Van);
@@ -155,7 +154,14 @@
 	    }
 	  });
 	  Van.prototype._init = function (options) {
+	    this.beforeInit = options.beforeInit;
+	    this.afterInit = options.afterInit;
+	
 	    var self = this;
+	
+	    if (this.beforeInit) {
+	      self.beforeInit.call(this);
+	    }
 	
 	    options = options || {};
 	
@@ -216,6 +222,10 @@
 	        self._render();
 	      }
 	      requestAnimationFrame(refresh);
+	    }
+	
+	    if (this.afterInit) {
+	      self.afterInit.call(this);
 	    }
 	  };
 	
@@ -412,7 +422,15 @@
 	  if (!debug) {
 	    return;
 	  }
-	  console.log(message);
+	  if (type === 'warn') {
+	    console.warn(message);
+	  } else if (type === 'error') {
+	    console.error(message);
+	  } else if (type === 'info') {
+	    console.info(message);
+	  } else {
+	    console.log(message);
+	  }
 	}
 
 /***/ },
@@ -756,6 +774,10 @@
 	
 	exports.default = function (Van) {
 	  Van.prototype.$emit = function (eventName, data) {
+	    if (this.$isRoot) {
+	      return;
+	    }
+	
 	    this.$parent._handleEvent(eventName, data);
 	  };
 	
@@ -788,11 +810,17 @@
 	    var func = this._events[eventName];
 	
 	    if (!func) {
+	      if (this.$isRoot) {
+	        return;
+	      }
 	      return this.$parent._handleEvent(eventName, data);
 	    } else {
 	      var flag = func.call(this, data);
 	
 	      if (flag) {
+	        if (this.$isRoot) {
+	          return;
+	        }
 	        this.$parent._handleEvent(eventName, data);
 	      } else {
 	        return false;

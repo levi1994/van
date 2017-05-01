@@ -3,6 +3,10 @@ import {isObject, isArray, arrayUtil, initCtx} from '../../util/index';
 let uid = 0;
 
 export default function(Van) {
+
+  // 使用Object.defineProperty来设置Van实例的$ctx和$canvas
+  // 使得可以只在根组件中存储绘图环境，
+  // 在子组件中任然可以自由访问
   Object.defineProperty(Van.prototype, '$ctx', {
     configurable: true,
     enumerable: true,
@@ -30,7 +34,16 @@ export default function(Van) {
     }
   });
   Van.prototype._init = function(options) {
+    // 初始化beforeInit和afterInit
+    this.beforeInit = options.beforeInit;
+    this.afterInit = options.afterInit;
+
     var self = this;
+
+    // 执行beforeInit
+    if (this.beforeInit) {
+      self.beforeInit.call(this);
+    }
 
     options = options || {};
 
@@ -110,6 +123,11 @@ export default function(Van) {
         self._render();
       }
       requestAnimationFrame(refresh);
+    }
+
+    // 执行afterInit
+    if (this.afterInit) {
+      self.afterInit.call(this);
     }
   };
 

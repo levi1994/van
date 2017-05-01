@@ -14,7 +14,6 @@ function Van(options) {
 
 // install internals
 initMixin(Van);
-// globalMixin(Van);
 lifecycleMixin(Van);
 componentMixin(Van);
 drawMinxin(Van);

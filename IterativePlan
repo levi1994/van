@@ -6,5 +6,5 @@ methods  ok
 离屏组件   ok
 Animation(ReCompute)    ok
 异步更新队列    ok
-Event(事件机制，主要用于父子组件之间的通信)
-Event(页面事件的监听，主要包括click，mouseover,mouseleave)
+Event(事件机制，主要用于父子组件之间的通信)  ok
+Event(页面事件的监听，主要包括click，mouseover,mouseleave)  doing

@@ -9,12 +9,18 @@ export default function(Van) {
     */
   Van.prototype.$emit = function(eventName, data) {
 
+    // 如果为根组件，则直接退出
+    if (this.$isRoot) {
+      return;
+    }
     // 直接调用父级组件的_handleEvent
     this.$parent._handleEvent(eventName, data);
   };
 
   /**
    * 注册事件
+   * [eventName] 需注册的事件名称
+   * [func] 所注册的事件处理函数
    */
   Van.prototype.$registEvent = function(eventName, func) {
 
@@ -37,6 +43,7 @@ export default function(Van) {
 
   /**
    * 取消已注册事件
+   * [eventName] 需取消注册的事件名称
    */
   Van.prototype.$unregistEvent = function(eventName) {
 
@@ -54,22 +61,35 @@ export default function(Van) {
    * 解析事件，事件执行后
    * 如果返回值为true，则继续冒泡
    * 如果返回值为false，则停止冒泡
+   * [eventName] 需处理的事件名称
+   * [data] 传递的数据对象
    */
   Van.prototype._handleEvent = function(eventName, data) {
     let func = this._events[eventName];
 
     // 判断自身是否有处理该事件的函数
     if (!func) {
+
+      // 如果为根组件，则不会有父级组件，故直接退出
+      if (this.$isRoot) {
+        return;
+      }
       return this.$parent._handleEvent(eventName, data);
     } else {
       let flag = func.call(this, data);
 
       // 如果返回值为true,则继续冒泡
       if (flag) {
+
+        // 如果为根组件，则不会有父级组件，故直接退出
+        if (this.$isRoot) {
+          return;
+        }
         this.$parent._handleEvent(eventName, data);
       } else {
         return false;
       }
     }
   };
+
 }

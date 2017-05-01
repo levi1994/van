@@ -1,5 +1,39 @@
 var Van = window.Van;
 
+var Shine = Van.component({
+  data: {
+
+  },
+  off: false,
+  render: function() {
+    // this.$registeEvent("sayHi",function(){
+    //   console.log();
+    // });
+  },
+  afterInit: function() {
+    this.$registEvent("showLog",function(){
+      console.log("hi");
+    });
+  },
+  components: {
+    'mineCircle': Van.Circle.newInstance({
+      x: 40,
+      y: 40,
+      radius: 20,
+      color: '#ccc',
+      fill: true,
+      name: 'mineCircle'
+    })
+  },
+  events: {
+    showLog: function(data) {
+      console.log("在Shine中接受到事件"+data);
+      return true;
+    }
+  }
+
+});
+
 var Mine = Van.component({
   data: {
 
@@ -16,18 +50,12 @@ var Mine = Van.component({
   afterRender: function() {
   },
   components: {
-    'mineCircle': Van.Circle.newInstance({
-      x: 40,
-      y: 40,
-      radius: 20,
-      color: '#ccc',
-      fill: true,
-      name: 'mineCircle'
-    }),
+    'shine': Shine.newInstance()
   },
   events: {
     showLog: function(data) {
-      console.log(data);
+      console.log("在Mine中接受到事件---"+data);
+      return true;
     }
   },
 });

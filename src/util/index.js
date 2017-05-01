@@ -149,5 +149,13 @@ export function tip(message, type) {
   if (!debug) {
     return;
   }
-  console.log(message);
+  if (type === 'warn') {
+    console.warn(message);
+  } else if (type === 'error') {
+    console.error(message);
+  } else if (type === 'info') {
+    console.info(message);
+  } else {
+    console.log(message);
+  }
 }
