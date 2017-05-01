@@ -56,7 +56,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	_Van2.default.version = '0.1.1';
+	_Van2.default.version = '0.1.2';
 	
 	window.Van = _Van2.default;
 	

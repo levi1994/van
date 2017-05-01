@@ -6,9 +6,6 @@ var Shine = Van.component({
   },
   off: false,
   render: function() {
-    // this.$registeEvent("sayHi",function(){
-    //   console.log();
-    // });
   },
   afterInit: function() {
     this.$registEvent("showLog",function(){
@@ -31,7 +28,6 @@ var Shine = Van.component({
       return true;
     }
   }
-
 });
 
 var Mine = Van.component({
@@ -117,4 +113,4 @@ van;
 // 现在要实现组件
 // 组件使用Van.component创建
 // 与根组件类似
-//
+
