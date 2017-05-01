@@ -5,6 +5,7 @@ import lifecycleMixin from './internal/lifecycle';
 import componentMixin from './api/component';
 import initComponents from '../components/index';
 import initAnimate from './api/animation';
+import initEvent from './api/event';
 
 // class Van
 function Van(options) {
@@ -19,5 +20,6 @@ componentMixin(Van);
 drawMinxin(Van);
 initComponents(Van);
 initAnimate(Van);
+initEvent(Van);
 
 export default Van;

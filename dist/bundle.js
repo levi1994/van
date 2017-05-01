@@ -96,6 +96,10 @@
 	
 	var _animation2 = _interopRequireDefault(_animation);
 	
+	var _event = __webpack_require__(14);
+	
+	var _event2 = _interopRequireDefault(_event);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function Van(options) {
@@ -109,6 +113,7 @@
 	(0, _draw2.default)(Van);
 	(0, _index2.default)(Van);
 	(0, _animation2.default)(Van);
+	(0, _event2.default)(Van);
 	
 	exports.default = Van;
 
@@ -175,6 +180,12 @@
 	    this.$components = options.components || {};
 	
 	    this._refresh = true;
+	
+	    this._events = {};
+	
+	    if (options.events) {
+	      this._events = options.events;
+	    }
 	
 	    if (options.methods) {
 	      for (var key in options.methods) {
@@ -732,6 +743,65 @@
 	    }
 	  }
 	};
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.prototype.$emit = function (eventName, data) {
+	    this.$parent._handleEvent(eventName, data);
+	  };
+	
+	  Van.prototype.$registEvent = function (eventName, func) {
+	    if (this._events.hasOwnProperty(eventName)) {
+	      (0, _index.tip)('事件注册失败:该事件名称已存在', 'error');
+	      return false;
+	    }
+	
+	    if (typeof func !== 'function') {
+	      (0, _index.tip)('事件注册失败:事件处理需为function', 'error');
+	      return false;
+	    }
+	
+	    this._events[eventName] = func;
+	    return true;
+	  };
+	
+	  Van.prototype.$unregistEvent = function (eventName) {
+	    if (!this._events.hasOwnProperty(eventName)) {
+	      (0, _index.tip)('事件取消注册失败:未找到名为' + eventName + '的事件', 'warn');
+	      return false;
+	    }
+	
+	    delete this._events[eventName];
+	    return true;
+	  };
+	
+	  Van.prototype._handleEvent = function (eventName, data) {
+	    var func = this._events[eventName];
+	
+	    if (!func) {
+	      return this.$parent._handleEvent(eventName, data);
+	    } else {
+	      var flag = func.call(this, data);
+	
+	      if (flag) {
+	        this.$parent._handleEvent(eventName, data);
+	      } else {
+	        return false;
+	      }
+	    }
+	  };
+	};
+	
+	var _index = __webpack_require__(3);
 
 /***/ }
 /******/ ]);

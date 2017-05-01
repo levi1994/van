@@ -24,7 +24,12 @@ var Mine = Van.component({
       fill: true,
       name: 'mineCircle'
     }),
-  }
+  },
+  events: {
+    showLog: function(data) {
+      console.log(data);
+    }
+  },
 });
 
 var van = new Van({

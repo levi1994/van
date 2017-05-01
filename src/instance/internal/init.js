@@ -59,7 +59,18 @@ export default function(Van) {
     this.created = options.created || function() {};
     this.$components = options.components || {};
 
+    // 初始化刷新标识，如果需要刷新则为true
     this._refresh = true;
+
+    // init event list
+    this._events = {};
+
+    // 初始化events
+    // 先使用参数中的events直接覆盖
+    // 如果有其他不能覆盖的情况，再做修改
+    if (options.events) {
+      this._events = options.events;
+    }
 
     // initialize mehtods
     if (options.methods) {
