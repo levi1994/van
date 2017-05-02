@@ -6,6 +6,7 @@ import componentMixin from './api/component';
 import initComponents from '../components/index';
 import initAnimate from './api/animation';
 import initEvent from './api/event';
+import initListener from './internal/listener';
 
 // class Van
 function Van(options) {
@@ -20,5 +21,6 @@ drawMinxin(Van);
 initComponents(Van);
 initAnimate(Van);
 initEvent(Van);
+initListener(Van);
 
 export default Van;

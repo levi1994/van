@@ -57,7 +57,7 @@ var Mine = Van.component({
 });
 
 var van = new Van({
-  el: '#canvas',
+  el: '#stage',
   data: {
     x: 100,
     y: 100

@@ -5,8 +5,7 @@ let uid = 0;
 export default function(Van) {
 
   // 使用Object.defineProperty来设置Van实例的$ctx和$canvas
-  // 使得可以只在根组件中存储绘图环境，
-  // 在子组件中任然可以自由访问
+  // 使得可以只在根组件中存储绘图环境，在子组件中任然可以自由访问
   Object.defineProperty(Van.prototype, '$ctx', {
     configurable: true,
     enumerable: true,
@@ -50,10 +49,12 @@ export default function(Van) {
     // if options contains el attribute
     // it's the root object
     if (options.el) {
-      this.$canvas = document.querySelector(options.el);
+      this.$canvas = createCanvas(options);
       this.$ctx = this.$canvas.getContext('2d');
       this.$isRoot = true;
       this.$root = this;
+
+      this._bindEvent(options);
     }
 
     // if it is off component
@@ -71,6 +72,20 @@ export default function(Van) {
     this.animate = options.animate;
     this.created = options.created || function() {};
     this.$components = options.components || {};
+    this.area = options.area;
+
+    // init mouseevent listener
+    let defaultListener = {
+      click: [],
+      mouseleave: [],
+      mouseenter: []
+    };
+    if (options.listener) {
+      defaultListener.click = options.listener.click || [];
+      defaultListener.mouseenter = options.listener.mouseenter || [];
+      defaultListener.mouseleave = options.listener.mouseleave || [];
+    }
+    this.listener = defaultListener;
 
     // 初始化刷新标识，如果需要刷新则为true
     this._refresh = true;
@@ -177,6 +192,34 @@ export default function(Van) {
     }
     return responseObj;
   };
+
+  Van.prototype._bindEvent = function(options) {
+    let self = this;
+      // 如果是根组件的话，绑定事件监听
+      // 为canvas的父容器组件绑定事件
+    let stage = document.querySelector(options.el);
+    stage.addEventListener('click', function(e) {
+      self._resolveListener('click', e);
+    });
+    stage.addEventListener('mousemove', function(e) {
+      self._resolveListener('mousemove', e);
+    });
+  };
+
+  // 根据传入选项创建canvas
+  function createCanvas(options) {
+
+    var stage = document.querySelector(options.el);
+    var canvas = document.createElement('canvas');
+    var width = options.canvas ? options.canvas.width || 500 : 500;
+    var height = options.canvas ? options.canvas.height || 500 : 500;
+
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
+    stage.appendChild(canvas);
+
+    return canvas;
+  }
 
 
 }

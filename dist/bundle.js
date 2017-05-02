@@ -100,6 +100,10 @@
 	
 	var _event2 = _interopRequireDefault(_event);
 	
+	var _listener = __webpack_require__(15);
+	
+	var _listener2 = _interopRequireDefault(_listener);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function Van(options) {
@@ -113,6 +117,7 @@
 	(0, _index2.default)(Van);
 	(0, _animation2.default)(Van);
 	(0, _event2.default)(Van);
+	(0, _listener2.default)(Van);
 	
 	exports.default = Van;
 
@@ -166,10 +171,12 @@
 	    options = options || {};
 	
 	    if (options.el) {
-	      this.$canvas = document.querySelector(options.el);
+	      this.$canvas = createCanvas(options);
 	      this.$ctx = this.$canvas.getContext('2d');
 	      this.$isRoot = true;
 	      this.$root = this;
+	
+	      this._bindEvent(options);
 	    }
 	
 	    if (options.off) {
@@ -184,6 +191,19 @@
 	    this.animate = options.animate;
 	    this.created = options.created || function () {};
 	    this.$components = options.components || {};
+	    this.area = options.area;
+	
+	    var defaultListener = {
+	      click: [],
+	      mouseleave: [],
+	      mouseenter: []
+	    };
+	    if (options.listener) {
+	      defaultListener.click = options.listener.click || [];
+	      defaultListener.mouseenter = options.listener.mouseenter || [];
+	      defaultListener.mouseleave = options.listener.mouseleave || [];
+	    }
+	    this.listener = defaultListener;
 	
 	    this._refresh = true;
 	
@@ -278,6 +298,32 @@
 	    }
 	    return responseObj;
 	  };
+	
+	  Van.prototype._bindEvent = function (options) {
+	    var self = this;
+	
+	    var stage = document.querySelector(options.el);
+	    stage.addEventListener('click', function (e) {
+	      self._resolveListener('click', e);
+	    });
+	    stage.addEventListener('mousemove', function (e) {
+	      self._resolveListener('mousemove', e);
+	    });
+	  };
+	
+	  function createCanvas(options) {
+	
+	    var stage = document.querySelector(options.el);
+	    var canvas = document.createElement('canvas');
+	    var width = options.canvas ? options.canvas.width || 500 : 500;
+	    var height = options.canvas ? options.canvas.height || 500 : 500;
+	
+	    canvas.setAttribute('width', width);
+	    canvas.setAttribute('height', height);
+	    stage.appendChild(canvas);
+	
+	    return canvas;
+	  }
 	};
 	
 	var _index = __webpack_require__(3);
@@ -638,23 +684,30 @@
 	        this.$ctx.stroke();
 	      }
 	    },
-	    animate: function animate() {
-	      if (this.flag) {
-	        this.radius++;
-	        if (this.radius > 100) {
-	          this.flag = false;
-	        }
-	      } else {
-	        this.radius--;
-	        if (this.radius < 20) {
-	          this.flag = true;
-	        }
-	      }
-	    },
+	
 	    created: function created() {},
 	    beforeRender: function beforeRender() {},
 	    afterRender: function afterRender() {},
-	    components: {}
+	    components: {},
+	    listener: {
+	      'click': [function () {
+	        alert(this.name);
+	      }],
+	      'mouseenter': [function () {
+	        this.radius += 10;
+	      }],
+	      'mouseleave': [function () {
+	        this.radius -= 10;
+	      }]
+	    },
+	    area: function area(offsetX, offsetY) {
+	      var delta = (offsetX - this.x) * (offsetX - this.x) + (offsetY - this.y) * (offsetY - this.y);
+	      var radius = this.radius * this.radius;
+	      if (delta < radius) {
+	        return true;
+	      }
+	      return false;
+	    }
 	  });
 	};
 
@@ -830,6 +883,87 @@
 	};
 	
 	var _index = __webpack_require__(3);
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.prototype._resolveListener = function (type, event) {
+	    var targets = [];
+	
+	    findTarget(event, this.$root, targets);
+	
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+	
+	    try {
+	      for (var _iterator = targets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	        var val = _step.value;
+	
+	        val.target._trigger(val.type);
+	      }
+	    } catch (err) {
+	      _didIteratorError = true;
+	      _iteratorError = err;
+	    } finally {
+	      try {
+	        if (!_iteratorNormalCompletion && _iterator.return) {
+	          _iterator.return();
+	        }
+	      } finally {
+	        if (_didIteratorError) {
+	          throw _iteratorError;
+	        }
+	      }
+	    }
+	  };
+	
+	  Van.prototype._trigger = function (type) {
+	    var events = this.listener[type];
+	    for (var key in events) {
+	      var func = events[key];
+	      func.call(this);
+	    }
+	  };
+	
+	  Van.prototype.$addEventListener = function (type, handle) {
+	    this.listener[type].push(handle);
+	  };
+	};
+	
+	function findTarget(event, comp, targets) {
+	  if (comp.area && comp.area(event.offsetX, event.offsetY)) {
+	    if (event.type === 'click') {
+	      targets.push({ type: 'click', target: comp });
+	    } else if (event.type === 'mousemove') {
+	      if (!comp._mouseFlag) {
+	        targets.push({ type: 'mouseenter', target: comp });
+	      }
+	    }
+	    comp._mouseFlag = true;
+	  } else if (comp.area && !comp.area(event.offsetX, event.offsetY)) {
+	    if (event.type === 'mousemove') {
+	      if (comp._mouseFlag) {
+	        targets.push({ type: 'mouseleave', target: comp });
+	      }
+	    }
+	
+	    comp._mouseFlag = false;
+	  }
+	
+	  var childrens = comp.$components;
+	  for (var key in childrens) {
+	    findTarget(event, childrens[key], targets);
+	  }
+	}
 
 /***/ }
 /******/ ]);
