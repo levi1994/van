@@ -1,5 +1,62 @@
 var Van = window.Van;
 
+var MineCircle = Van.component({
+  data: {
+    x: 50,
+    y: 80,
+    radius: 50,
+    color: 'black',
+    fill: false,
+    name: 'circle',
+    flag: true
+  },
+  render: function() {
+    this.$ctx.beginPath();
+    this.$ctx.strokeStyle = this.color;
+    this.$ctx.fillStyle = this.color;
+    this.$ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+    if (this.data.fill) {
+      this.$ctx.fill();
+    } else {
+      this.$ctx.stroke();
+    }
+  },
+  created: function() {
+    // console.log('created');
+  },
+  beforeRender: function() {
+    // console.log(this.name + ' render before');
+  },
+  afterRender: function() {
+    // console.log(this.name + 'render after');
+  },
+  components: {
+
+  },
+  listener: {
+    'click': [function() {
+      alert(this.name);
+    }],
+    'mouseenter': [function() {
+      this.radius += 10;
+    }],
+    'mouseleave': [function() {
+      this.radius -= 10;
+    }]
+  },
+  area: function(offsetX, offsetY) {
+    // 判断是否在区域范围内
+    // 若两点之间的距离小于radius,则说明在圆圈的范围内
+    var delta = (offsetX - this.x) * (offsetX - this.x) +
+                (offsetY - this.y) * (offsetY - this.y);
+    var radius = this.radius * this.radius;
+    if (delta < radius) {
+      return true;
+    }
+    return false;
+  }
+});
+
 var Shine = Van.component({
   data: {
 
@@ -22,7 +79,7 @@ var Shine = Van.component({
       name: 'mineCircle'
     })
   },
-  events: {
+  handler: {
     showLog: function(data) {
       console.log("在Shine中接受到事件"+data);
       return true;
@@ -48,7 +105,7 @@ var Mine = Van.component({
   components: {
     'shine': Shine.newInstance()
   },
-  events: {
+  handler: {
     showLog: function(data) {
       console.log("在Mine中接受到事件---"+data);
       return true;
@@ -73,38 +130,14 @@ var van = new Van({
   },
   // 这里不要再用数组了，使用一个对象
   components: {
-    'circle1': Van.Circle.newOffInstance({
+    'circle1': MineCircle.newOffInstance({
       x: 80,
       y: 80,
       radius: 30,
       color: 'red',
       name: 'circle1',
     }),
-    'circle2': Van.Circle.newInstance({
-      name: 'circle2',
-      x: 60,
-      y: 60,
-      radius: 20,
-      fill: false,
-      color: 'black'
-    }),
-    'circle3': Van.Circle.newInstance({
-      x: 40,
-      y: 40,
-      radius: 20,
-      color: '#ccc',
-      fill: false,
-      name: 'circle3'
-    }),
-    'mine': Mine.newInstance(),
-    'mines': Mine.newInstance(),
-    'line': Van.Line.newInstance({
-      x1: 50,
-      y1: 10,
-      x2: 100,
-      y2: 100,
-      name: 'ss'
-    })
+    'mine': Mine.newInstance()
   }
 });
 

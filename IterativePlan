@@ -10,3 +10,8 @@ Event(事件机制，主要用于父子组件之间的通信)  ok
 事件派发 dispatch
 Event(页面事件的监听，主要包括click，mouseover,mouseleave)  doing
 插件支持    todo
+
+Event事件机制改名为Message(消息机制) 接收器由events改名handler
+Animation动画部分要再想想
+
+Van.nextFrame(在下一帧渲染前触发)

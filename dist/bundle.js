@@ -104,6 +104,10 @@
 	
 	var _listener2 = _interopRequireDefault(_listener);
 	
+	var _plugin = __webpack_require__(16);
+	
+	var _plugin2 = _interopRequireDefault(_plugin);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function Van(options) {
@@ -118,6 +122,7 @@
 	(0, _animation2.default)(Van);
 	(0, _event2.default)(Van);
 	(0, _listener2.default)(Van);
+	(0, _plugin2.default)(Van);
 	
 	exports.default = Van;
 
@@ -207,10 +212,10 @@
 	
 	    this._refresh = true;
 	
-	    this._events = {};
+	    this._handler = {};
 	
-	    if (options.events) {
-	      this._events = options.events;
+	    if (options.handler) {
+	      this._handler = options.handler;
 	    }
 	
 	    if (options.methods) {
@@ -684,22 +689,10 @@
 	        this.$ctx.stroke();
 	      }
 	    },
-	
 	    created: function created() {},
 	    beforeRender: function beforeRender() {},
 	    afterRender: function afterRender() {},
 	    components: {},
-	    listener: {
-	      'click': [function () {
-	        alert(this.name);
-	      }],
-	      'mouseenter': [function () {
-	        this.radius += 10;
-	      }],
-	      'mouseleave': [function () {
-	        this.radius -= 10;
-	      }]
-	    },
 	    area: function area(offsetX, offsetY) {
 	      var delta = (offsetX - this.x) * (offsetX - this.x) + (offsetY - this.y) * (offsetY - this.y);
 	      var radius = this.radius * this.radius;
@@ -826,47 +819,73 @@
 	});
 	
 	exports.default = function (Van) {
-	  Van.prototype.$emit = function (eventName, data) {
+	  Van.prototype.$emit = function (handlerName, data) {
 	    if (this.$isRoot) {
 	      return;
 	    }
 	
-	    this.$parent._handleEvent(eventName, data);
+	    this.$parent._handleEmit(handlerName, data);
 	  };
 	
-	  Van.prototype.$registEvent = function (eventName, func) {
-	    if (this._events.hasOwnProperty(eventName)) {
-	      (0, _index.tip)('事件注册失败:该事件名称已存在', 'error');
+	  Van.prototype.$dispatch = function (handlerName, data) {
+	    var components = this.$components;
+	    for (var key in components) {
+	      var component = components[key];
+	      component._handleDispatch(handlerName, data);
+	    }
+	  };
+	
+	  Van.prototype._handleDispatch = function (handlerName, data) {
+	    var func = this._handler[handlerName];
+	
+	    if (!func) {
+	      for (var key in this.$components) {
+	        this.$components[key]._handleDispatch(handlerName, data);
+	      }
+	    } else {
+	      var flag = func.call(this, data);
+	
+	      if (flag) {
+	        for (var _key in this.$components) {
+	          this.$components[_key]._handleDispatch(handlerName, data);
+	        }
+	      }
+	    }
+	  };
+	
+	  Van.prototype.$registEvent = function (handlerName, func) {
+	    if (this._handler.hasOwnProperty(handlerName)) {
+	      (0, _index.tip)('handler注册失败:该handler名称已存在', 'error');
 	      return false;
 	    }
 	
 	    if (typeof func !== 'function') {
-	      (0, _index.tip)('事件注册失败:事件处理需为function', 'error');
+	      (0, _index.tip)('handler注册失败:handler处理需为function', 'error');
 	      return false;
 	    }
 	
-	    this._events[eventName] = func;
+	    this._handler[handlerName] = func;
 	    return true;
 	  };
 	
-	  Van.prototype.$unregistEvent = function (eventName) {
-	    if (!this._events.hasOwnProperty(eventName)) {
-	      (0, _index.tip)('事件取消注册失败:未找到名为' + eventName + '的事件', 'warn');
+	  Van.prototype.$unregistEvent = function (handlerName) {
+	    if (!this._handler.hasOwnProperty(handlerName)) {
+	      (0, _index.tip)('事件取消注册失败:未找到名为' + handlerName + '的事件', 'warn');
 	      return false;
 	    }
 	
-	    delete this._events[eventName];
+	    delete this._handler[handlerName];
 	    return true;
 	  };
 	
-	  Van.prototype._handleEvent = function (eventName, data) {
-	    var func = this._events[eventName];
+	  Van.prototype._handleEmit = function (handlerName, data) {
+	    var func = this._handler[handlerName];
 	
 	    if (!func) {
 	      if (this.$isRoot) {
 	        return;
 	      }
-	      return this.$parent._handleEvent(eventName, data);
+	      return this.$parent._handleEmit(handlerName, data);
 	    } else {
 	      var flag = func.call(this, data);
 	
@@ -874,7 +893,7 @@
 	        if (this.$isRoot) {
 	          return;
 	        }
-	        this.$parent._handleEvent(eventName, data);
+	        this.$parent._handleEmit(handlerName, data);
 	      } else {
 	        return false;
 	      }
@@ -964,6 +983,20 @@
 	    findTarget(event, childrens[key], targets);
 	  }
 	}
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.use = function (func) {};
+	};
 
 /***/ }
 /******/ ]);

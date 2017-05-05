@@ -20,19 +20,6 @@ export default function(Van) {
         this.$ctx.stroke();
       }
     },
-    // animate: function() {
-    //   if (this.flag) {
-    //     this.radius ++;
-    //     if (this.radius > 100) {
-    //       this.flag = false;
-    //     }
-    //   } else {
-    //     this.radius --;
-    //     if (this.radius < 20) {
-    //       this.flag = true;
-    //     }
-    //   }
-    // },
     created: function() {
       // console.log('created');
     },
@@ -44,17 +31,6 @@ export default function(Van) {
     },
     components: {
 
-    },
-    listener: {
-      'click': [function() {
-        alert(this.name);
-      }],
-      'mouseenter': [function() {
-        this.radius += 10;
-      }],
-      'mouseleave': [function() {
-        this.radius -= 10;
-      }]
     },
     area: function(offsetX, offsetY) {
       // 判断是否在区域范围内

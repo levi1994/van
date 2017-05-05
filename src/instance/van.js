@@ -7,6 +7,7 @@ import initComponents from '../components/index';
 import initAnimate from './api/animation';
 import initEvent from './api/event';
 import initListener from './internal/listener';
+import initPlugin from './api/plugin';
 
 // class Van
 function Van(options) {
@@ -22,5 +23,6 @@ initComponents(Van);
 initAnimate(Van);
 initEvent(Van);
 initListener(Van);
+initPlugin(Van);
 
 export default Van;

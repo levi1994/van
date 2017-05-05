@@ -91,13 +91,13 @@ export default function(Van) {
     this._refresh = true;
 
     // init event list
-    this._events = {};
+    this._handler = {};
 
     // 初始化events
     // 先使用参数中的events直接覆盖
     // 如果有其他不能覆盖的情况，再做修改
-    if (options.events) {
-      this._events = options.events;
+    if (options.handler) {
+      this._handler = options.handler;
     }
 
     // initialize mehtods
