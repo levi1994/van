@@ -21,6 +21,9 @@ var MineCircle = Van.component({
       this.$ctx.stroke();
     }
   },
+  beforeInit: function() {
+    console.log('生命周期调用成功');
+  },
   created: function() {
     // console.log('created');
   },

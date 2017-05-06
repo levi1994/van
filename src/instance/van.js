@@ -1,7 +1,7 @@
 import initMixin from './internal/init';
 // import globalMixin from './api/global';
 import drawMinxin from './api/draw';
-import lifecycleMixin from './internal/lifecycle';
+import {lifecycleMixin} from './internal/lifecycle';
 import componentMixin from './api/component';
 import initComponents from '../components/index';
 import initAnimate from './api/animation';

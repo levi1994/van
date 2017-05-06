@@ -57,4 +57,11 @@ export default function(Van) {
 
     return instance;
   };
+
+  // mount component
+  Van.prototype.$mount = function(component) {
+    // get uid
+    let _uid = component._uid;
+    this.$components[_uid] = component;
+  };
 }

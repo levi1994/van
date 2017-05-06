@@ -1,4 +1,5 @@
 import {isObject, isArray, arrayUtil, initCtx} from '../../util/index';
+import {callHook} from './lifecycle.js';
 
 let uid = 0;
 
@@ -32,6 +33,11 @@ export default function(Van) {
       this._canvas = value;
     }
   });
+
+  /**
+   * Van对象初始化方法
+   * options
+   */
   Van.prototype._init = function(options) {
     // 初始化beforeInit和afterInit
     this.beforeInit = options.beforeInit;
@@ -39,10 +45,8 @@ export default function(Van) {
 
     var self = this;
 
-    // 执行beforeInit
-    if (this.beforeInit) {
-      self.beforeInit.call(this);
-    }
+    // 调用beforeInit钩子
+    callHook(this, 'beforeInit');
 
     options = options || {};
 
@@ -142,7 +146,7 @@ export default function(Van) {
 
     // 执行afterInit
     if (this.afterInit) {
-      self.afterInit.call(this);
+      callHook(this, 'afterInit');
     }
   };
 

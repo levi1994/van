@@ -76,13 +76,11 @@
 	
 	var _init2 = _interopRequireDefault(_init);
 	
-	var _draw = __webpack_require__(4);
+	var _draw = __webpack_require__(5);
 	
 	var _draw2 = _interopRequireDefault(_draw);
 	
-	var _lifecycle = __webpack_require__(5);
-	
-	var _lifecycle2 = _interopRequireDefault(_lifecycle);
+	var _lifecycle = __webpack_require__(4);
 	
 	var _component = __webpack_require__(6);
 	
@@ -115,7 +113,7 @@
 	}
 	
 	(0, _init2.default)(Van);
-	(0, _lifecycle2.default)(Van);
+	(0, _lifecycle.lifecycleMixin)(Van);
 	(0, _component2.default)(Van);
 	(0, _draw2.default)(Van);
 	(0, _index2.default)(Van);
@@ -169,9 +167,7 @@
 	
 	    var self = this;
 	
-	    if (this.beforeInit) {
-	      self.beforeInit.call(this);
-	    }
+	    (0, _lifecycle.callHook)(this, 'beforeInit');
 	
 	    options = options || {};
 	
@@ -250,7 +246,7 @@
 	    }
 	
 	    if (this.afterInit) {
-	      self.afterInit.call(this);
+	      (0, _lifecycle.callHook)(this, 'afterInit');
 	    }
 	  };
 	
@@ -332,6 +328,8 @@
 	};
 	
 	var _index = __webpack_require__(3);
+	
+	var _lifecycle = __webpack_require__(4);
 	
 	var uid = 0;
 
@@ -488,42 +486,14 @@
 /* 4 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
-	exports.default = function (Van) {
-	  Van.prototype.$clearRect = function () {
-	    var ctx = this.$ctx;
-	    ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
-	  };
-	};
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function (Van) {
-	
-	  Van.prototype._beforeRender = function () {
-	    if (this.beforeRender) {
-	      this.beforeRender();
-	    }
-	  };
-	
-	  Van.prototype._afterRender = function () {
-	    if (this.afterRender) {
-	      this.afterRender();
-	    }
-	  };
+	exports.lifecycleMixin = lifecycleMixin;
+	exports.callHook = callHook;
+	function lifecycleMixin(Van) {
 	
 	  Van.prototype._render = function () {
 	    var self = this;
@@ -534,13 +504,13 @@
 	      }
 	    }
 	
-	    this._beforeRender();
+	    callHook(this, 'beforeRender');
 	
 	    if (this.render) {
 	      this.render();
 	    }
 	
-	    this._afterRender();
+	    callHook(this, 'afterRender');
 	  };
 	
 	  Van.prototype.reRender = function () {
@@ -553,6 +523,30 @@
 	        this.$parent.reRender();
 	      }
 	    }
+	  };
+	}
+	
+	function callHook(vm, hook) {
+	  var handlers = vm[hook];
+	  if (handlers) {
+	    handlers.call(vm);
+	  } else {}
+	}
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (Van) {
+	  Van.prototype.$clearRect = function () {
+	    var ctx = this.$ctx;
+	    ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
 	  };
 	};
 

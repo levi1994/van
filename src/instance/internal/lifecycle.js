@@ -1,16 +1,4 @@
-export default function(Van) {
-
-  Van.prototype._beforeRender = function() {
-    if (this.beforeRender) {
-      this.beforeRender();
-    }
-  };
-
-  Van.prototype._afterRender = function() {
-    if (this.afterRender) {
-      this.afterRender();
-    }
-  };
+export function lifecycleMixin(Van) {
 
   Van.prototype._render = function() {
 
@@ -25,7 +13,7 @@ export default function(Van) {
     }
 
     // excute beforeRender function
-    this._beforeRender();
+    callHook(this, 'beforeRender');
 
     // render
     if (this.render) {
@@ -33,7 +21,7 @@ export default function(Van) {
     }
 
     // excute afterRender function
-    this._afterRender();
+    callHook(this, 'afterRender');
   };
 
   // re render
@@ -53,4 +41,18 @@ export default function(Van) {
     }
   };
 
+}
+
+/**
+ * 执行生命周期钩子
+ * vm: View Model
+ * hook : lifecycle name
+ */
+export function callHook(vm, hook) {
+  const handlers = vm[hook];
+  if (handlers) {
+    handlers.call(vm);
+  } else {
+
+  }
 }
