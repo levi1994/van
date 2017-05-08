@@ -39,6 +39,9 @@ export default function(Van) {
    * options
    */
   Van.prototype._init = function(options) {
+    // generate a uid
+    this._uid = uid++;
+
     // 初始化beforeInit和afterInit
     this.beforeInit = options.beforeInit;
     this.afterInit = options.afterInit;
@@ -50,35 +53,40 @@ export default function(Van) {
 
     options = options || {};
 
-    // if options contains el attribute
-    // it's the root object
+    // 如果options中包含el属性的话
+    // 则说明该组件为根组件，须初始化画布等信息
     if (options.el) {
       this.$canvas = createCanvas(options);
       this.$ctx = this.$canvas.getContext('2d');
       this.$isRoot = true;
       this.$root = this;
 
+      // 对根组件的click事件和mousemove事件进行监听
+      // 根据click和mousemove确定组件的事件
       this._bindEvent(options);
     }
 
-    // if it is off component
+    // 如果是离屏组件
     if (options.off) {
       this.$off = true;
     }
 
-    // place the options property to the object
+    // 在组件对象上挂载options
     this.$options = options;
 
-    // init options
+    // 将options中的部分属性挂载至vm
     this.render = options.render || this.render;
     this.beforeRender = options.beforeRender || this.beforeRender;
     this.afterRender = options.afterRender || this.afterRender;
-    this.animate = options.animate;
+    this.recompute = options.recompute;
     this.created = options.created || function() {};
     this.$components = options.components || {};
     this.area = options.area;
+    this.background = options.background;
 
-    // init mouseevent listener
+    // 初始化鼠标事件
+    // 目前主要有click、mouseleave、mouseenter等事件
+    // 使用数组的方式存储
     let defaultListener = {
       click: [],
       mouseleave: [],
@@ -94,7 +102,7 @@ export default function(Van) {
     // 初始化刷新标识，如果需要刷新则为true
     this._refresh = true;
 
-    // init event list
+    // 初始化消息处理器
     this._handler = {};
 
     // 初始化events
@@ -104,33 +112,30 @@ export default function(Van) {
       this._handler = options.handler;
     }
 
-    // initialize mehtods
+    // 初始化内置方法
     if (options.methods) {
       for (var key in options.methods) {
         this[key] = options.methods[key];
       }
     }
 
-    // generate a uid
-    this._uid = uid++;
-
-    // convert data to response data
+    // 将普通数据（data）转为响应式数据并放到vm上
     this.data = this._initData(this, options.data, true);
 
     if (this.$isRoot) {
 
-      // initialize all subcomponent runtime context
+      // 初始化所有子组件的运行时环境
       initCtx(this);
 
-      // excute _render function
+      // 渲染组件
       this._render();
     }
 
     if (this.$isRoot) {
-      // animate
-      this._animateTimer = setInterval(function() {
-        self._animate();
-      }, 30);
+      // 定时执行_recompute方法,重新计算图形属性
+      this._recomputeTimer = setInterval(function() {
+        self._recompute();
+      }, 17);
 
       this._raf = requestAnimationFrame(refresh);
 
@@ -141,6 +146,7 @@ export default function(Van) {
       if (self._refresh) {
         self._render();
       }
+      callHook(self, 'nextFrame');
       requestAnimationFrame(refresh);
     }
 
@@ -199,8 +205,9 @@ export default function(Van) {
 
   Van.prototype._bindEvent = function(options) {
     let self = this;
-      // 如果是根组件的话，绑定事件监听
-      // 为canvas的父容器组件绑定事件
+
+    // 如果是根组件的话，绑定事件监听
+    // 为canvas的父容器组件绑定事件
     let stage = document.querySelector(options.el);
     stage.addEventListener('click', function(e) {
       self._resolveListener('click', e);
@@ -220,10 +227,15 @@ export default function(Van) {
 
     canvas.setAttribute('width', width);
     canvas.setAttribute('height', height);
-    stage.appendChild(canvas);
-
+    canvas.style.position = 'absolute';
+    canvas.style.left = 0;
+    canvas.style.top = 0;
+    // canvas.style.background = 'rgb(241, 241, 241)';
+    if (options.background) {
+      stage.insertBefore(canvas);
+    } else {
+      stage.appendChild(canvas);
+    }
     return canvas;
   }
-
-
 }

@@ -5,48 +5,62 @@ export function isObject(obj) {
 export const isArray = Array.isArray;
 
 let _offid = 0;
-// Recursively set the runtime environment
-// for component and subcomponent
+
+/**
+ * 初始化子组件的运行时环境
+ * 1.初始化组件的$parent属性
+ * 2.如果是离屏组件，则创建新的canvas
+ */
 export function initCtx(van) {
   var comps = van.$components;
   for (var key in comps) {
     if (comps.hasOwnProperty(key)) {
       comps[key].$parent = van;
 
-      // if it is off canvas component,
-      // create a canvas element
+      // 如果是离屏组件，则创建canvas节点
       if (comps[key].$off) {
-        var rootCanvas = van.$canvas;
-
-        // create a canvas element after root canvas
-        var offCanvas = document.createElement('canvas');
-        var _cid = _offid++;
-
-        // set component id
-        offCanvas.id = key + _cid;
-        offCanvas.setAttribute('_cid', _cid);
-
-        // insert canvas element into DOM tree
-        rootCanvas.after(offCanvas);
-
-        // set off-scrren canvas style
-        offCanvas.style.position = 'absolute';
-        offCanvas.style.left = 0;
-        offCanvas.style.top = 0;
-        offCanvas.width = rootCanvas.width;
-        offCanvas.height = rootCanvas.height;
-
-        // init component context
-        comps[key].$canvas = offCanvas;
-        comps[key].$ctx = offCanvas.getContext('2d');
-        initCtx(comps[key]);
+        toOffCanvas(comps[key]);
       } else {
-        // comps[key].$ctx = van.$ctx;
-        // comps[key].$canvas = van.$canvas;
         initCtx(comps[key]);
       }
     }
   }
+}
+
+/**
+ * 根据组件信息创建一个离屏组件
+ */
+export function toOffCanvas(component) {
+  var rootCanvas = component.$canvas;
+
+  // 创建canvas并设置id，样式
+  var offCanvas = document.createElement('canvas');
+  var _cid = _offid++;
+
+  // set component id
+  offCanvas.id = _cid;
+  offCanvas.setAttribute('_cid', _cid);
+
+  // insert canvas element into DOM tree
+  // rootCanvas.after(offCanvas);
+
+  if (component.background) {
+    rootCanvas.before(offCanvas);
+  } else {
+    rootCanvas.after(offCanvas);
+  }
+
+  // set off-scrren canvas style
+  offCanvas.style.position = 'absolute';
+  offCanvas.style.left = 0;
+  offCanvas.style.top = 0;
+  offCanvas.width = rootCanvas.width;
+  offCanvas.height = rootCanvas.height;
+
+  // 将创建的canvas和器ctx都挂载到组件
+  component.$canvas = offCanvas;
+  component.$ctx = offCanvas.getContext('2d');
+  initCtx(component);
 }
 
 // merge two object

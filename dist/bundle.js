@@ -161,7 +161,10 @@
 	      this._canvas = value;
 	    }
 	  });
+	
 	  Van.prototype._init = function (options) {
+	    this._uid = uid++;
+	
 	    this.beforeInit = options.beforeInit;
 	    this.afterInit = options.afterInit;
 	
@@ -189,10 +192,11 @@
 	    this.render = options.render || this.render;
 	    this.beforeRender = options.beforeRender || this.beforeRender;
 	    this.afterRender = options.afterRender || this.afterRender;
-	    this.animate = options.animate;
+	    this.recompute = options.recompute;
 	    this.created = options.created || function () {};
 	    this.$components = options.components || {};
 	    this.area = options.area;
+	    this.background = options.background;
 	
 	    var defaultListener = {
 	      click: [],
@@ -220,8 +224,6 @@
 	      }
 	    }
 	
-	    this._uid = uid++;
-	
 	    this.data = this._initData(this, options.data, true);
 	
 	    if (this.$isRoot) {
@@ -231,9 +233,9 @@
 	    }
 	
 	    if (this.$isRoot) {
-	      this._animateTimer = setInterval(function () {
-	        self._animate();
-	      }, 30);
+	      this._recomputeTimer = setInterval(function () {
+	        self._recompute();
+	      }, 17);
 	
 	      this._raf = requestAnimationFrame(refresh);
 	    }
@@ -242,6 +244,7 @@
 	      if (self._refresh) {
 	        self._render();
 	      }
+	      (0, _lifecycle.callHook)(self, 'nextFrame');
 	      requestAnimationFrame(refresh);
 	    }
 	
@@ -321,8 +324,15 @@
 	
 	    canvas.setAttribute('width', width);
 	    canvas.setAttribute('height', height);
-	    stage.appendChild(canvas);
+	    canvas.style.position = 'absolute';
+	    canvas.style.left = 0;
+	    canvas.style.top = 0;
 	
+	    if (options.background) {
+	      stage.insertBefore(canvas);
+	    } else {
+	      stage.appendChild(canvas);
+	    }
 	    return canvas;
 	  }
 	};
@@ -347,6 +357,7 @@
 	
 	exports.isObject = isObject;
 	exports.initCtx = initCtx;
+	exports.toOffCanvas = toOffCanvas;
 	exports.mergeTo = mergeTo;
 	exports.isUndef = isUndef;
 	exports.isDef = isDef;
@@ -366,6 +377,7 @@
 	var isArray = exports.isArray = Array.isArray;
 	
 	var _offid = 0;
+	
 	function initCtx(van) {
 	  var comps = van.$components;
 	  for (var key in comps) {
@@ -373,30 +385,38 @@
 	      comps[key].$parent = van;
 	
 	      if (comps[key].$off) {
-	        var rootCanvas = van.$canvas;
-	
-	        var offCanvas = document.createElement('canvas');
-	        var _cid = _offid++;
-	
-	        offCanvas.id = key + _cid;
-	        offCanvas.setAttribute('_cid', _cid);
-	
-	        rootCanvas.after(offCanvas);
-	
-	        offCanvas.style.position = 'absolute';
-	        offCanvas.style.left = 0;
-	        offCanvas.style.top = 0;
-	        offCanvas.width = rootCanvas.width;
-	        offCanvas.height = rootCanvas.height;
-	
-	        comps[key].$canvas = offCanvas;
-	        comps[key].$ctx = offCanvas.getContext('2d');
-	        initCtx(comps[key]);
+	        toOffCanvas(comps[key]);
 	      } else {
 	        initCtx(comps[key]);
 	      }
 	    }
 	  }
+	}
+	
+	function toOffCanvas(component) {
+	  var rootCanvas = component.$canvas;
+	
+	  var offCanvas = document.createElement('canvas');
+	  var _cid = _offid++;
+	
+	  offCanvas.id = _cid;
+	  offCanvas.setAttribute('_cid', _cid);
+	
+	  if (component.background) {
+	    rootCanvas.before(offCanvas);
+	  } else {
+	    rootCanvas.after(offCanvas);
+	  }
+	
+	  offCanvas.style.position = 'absolute';
+	  offCanvas.style.left = 0;
+	  offCanvas.style.top = 0;
+	  offCanvas.width = rootCanvas.width;
+	  offCanvas.height = rootCanvas.height;
+	
+	  component.$canvas = offCanvas;
+	  component.$ctx = offCanvas.getContext('2d');
+	  initCtx(component);
 	}
 	
 	function mergeTo(from, to) {
@@ -524,6 +544,8 @@
 	      }
 	    }
 	  };
+	
+	  Van.prototype._destroy = function () {};
 	}
 	
 	function callHook(vm, hook) {
@@ -606,6 +628,19 @@
 	    instance.$isInstance = true;
 	
 	    return instance;
+	  };
+	
+	  Van.prototype.$mount = function (component) {
+	    var _uid = component._uid;
+	    component.$parent = this;
+	    this.$components[_uid] = component;
+	    if (component.$off) {
+	      (0, _index.toOffCanvas)(component);
+	    }
+	  };
+	
+	  Van.prototype.$unmount = function (_uid) {
+	    this.$components[_uid] = null;
 	  };
 	};
 	
@@ -702,7 +737,7 @@
 /* 9 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -710,8 +745,21 @@
 	
 	exports.default = function (Van) {
 	  Van.Image = Van.component({
-	    data: {},
-	    render: function render() {}
+	    data: {
+	      src: '',
+	      width: 500,
+	      height: 500
+	    },
+	    off: true,
+	    background: true,
+	    render: function render() {
+	      var self = this;
+	      var img = new Image();
+	      img.onload = function () {
+	        self.$ctx.drawImage(img, 0, 0);
+	      };
+	      img.src = self.src;
+	    }
 	  });
 	};
 
@@ -785,18 +833,18 @@
 	});
 	
 	exports.default = function (Van) {
-	  Van.prototype._animate = function () {
-	    callAnimate(this);
+	  Van.prototype._recompute = function () {
+	    callRecompute(this);
 	  };
 	
-	  function callAnimate(van) {
-	    if (van.animate) {
-	      van.animate();
+	  function callRecompute(van) {
+	    if (van.recompute) {
+	      van.recompute();
 	    }
 	
 	    for (var key in van.$components) {
 	      if (van.$components.hasOwnProperty(key)) {
-	        callAnimate(van.$components[key]);
+	        callRecompute(van.$components[key]);
 	      }
 	    }
 	  }

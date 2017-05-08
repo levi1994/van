@@ -41,6 +41,13 @@ export function lifecycleMixin(Van) {
     }
   };
 
+  /**
+   * 组件销毁
+   */
+  Van.prototype._destroy = function() {
+
+  };
+
 }
 
 /**

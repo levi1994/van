@@ -1,4 +1,4 @@
-import {mergeTo} from '../../util/index';
+import {mergeTo, toOffCanvas} from '../../util/index';
 
 // component related interface
 export default function(Van) {
@@ -62,6 +62,15 @@ export default function(Van) {
   Van.prototype.$mount = function(component) {
     // get uid
     let _uid = component._uid;
+    component.$parent = this;
     this.$components[_uid] = component;
+    if (component.$off) {
+      toOffCanvas(component);
+    }
+  };
+
+  // unmount component
+  Van.prototype.$unmount = function(_uid) {
+    this.$components[_uid] = null;
   };
 }

@@ -1,17 +1,17 @@
 export default function(Van) {
-  Van.prototype._animate = function() {
-    callAnimate(this);
+  Van.prototype._recompute = function() {
+    callRecompute(this);
   };
 
-  function callAnimate(van) {
-    if (van.animate) {
-      van.animate();
+  function callRecompute(van) {
+    if (van.recompute) {
+      van.recompute();
     }
 
-    // excute sub-component's animate()
+    // excute sub-component's recompute()
     for (var key in van.$components) {
       if (van.$components.hasOwnProperty(key)) {
-        callAnimate(van.$components[key]);
+        callRecompute(van.$components[key]);
       }
     }
   }
