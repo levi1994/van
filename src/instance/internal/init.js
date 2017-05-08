@@ -80,9 +80,18 @@ export default function(Van) {
     this.afterRender = options.afterRender || this.afterRender;
     this.recompute = options.recompute;
     this.created = options.created || function() {};
-    this.$components = options.components || {};
     this.area = options.area;
     this.background = options.background;
+
+    // 初始化$components
+    this.$components = {};
+    if (options.components) {
+      for (let key in options.components) {
+        let comp = options.components[key];
+        this.$components[comp._uid] = comp;
+      }
+    }
+
 
     // 初始化鼠标事件
     // 目前主要有click、mouseleave、mouseenter等事件

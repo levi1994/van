@@ -71,6 +71,8 @@ export default function(Van) {
 
   // unmount component
   Van.prototype.$unmount = function(_uid) {
-    this.$components[_uid] = null;
+    if (this.$components[_uid]) {
+      delete this.$components[_uid];
+    }
   };
 }

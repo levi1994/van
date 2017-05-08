@@ -68,10 +68,10 @@ var BlockGroup = Van.component({
     h2: 0,
     x: 300
   },
-  components: {
-    'block1': Block.newInstance(),
-    'block2': Block.newInstance()
-  }
+  components: [
+    Block.newInstance(),
+    Block.newInstance()
+  ]
 });
 
 var van = new Van({
@@ -85,14 +85,13 @@ var van = new Van({
     y: 100
   },
   // 这里不要再用数组了，使用一个对象
-  components: {
-    'img': Van.Image.newInstance({
+  components: [
+    Van.Image.newInstance({
       src:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494224287122&di=6c111ce35c472d5e27c418bddb92cde2&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F14%2F74%2F43%2F34R58PICcD9_1024.jpg",
     }),
-    'bird': Bird.newInstance(),
-    'block': Block.newInstance(),
-    
-  },
+    Bird.newInstance(),
+    Block.newInstance(),
+  ],
   area: function() {
     return true;
   },

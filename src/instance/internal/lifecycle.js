@@ -46,6 +46,9 @@ export function lifecycleMixin(Van) {
    */
   Van.prototype._destroy = function() {
 
+    // 找到组件的父组件，从父组件中移除该组件
+    let parent = this.$parent;
+    parent.$unmount(this._uid);
   };
 
 }

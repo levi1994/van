@@ -194,9 +194,16 @@
 	    this.afterRender = options.afterRender || this.afterRender;
 	    this.recompute = options.recompute;
 	    this.created = options.created || function () {};
-	    this.$components = options.components || {};
 	    this.area = options.area;
 	    this.background = options.background;
+	
+	    this.$components = {};
+	    if (options.components) {
+	      for (var _key in options.components) {
+	        var comp = options.components[_key];
+	        this.$components[comp._uid] = comp;
+	      }
+	    }
 	
 	    var defaultListener = {
 	      click: [],
@@ -545,7 +552,10 @@
 	    }
 	  };
 	
-	  Van.prototype._destroy = function () {};
+	  Van.prototype._destroy = function () {
+	    var parent = this.$parent;
+	    parent.$unmount(this._uid);
+	  };
 	}
 	
 	function callHook(vm, hook) {
@@ -640,7 +650,9 @@
 	  };
 	
 	  Van.prototype.$unmount = function (_uid) {
-	    this.$components[_uid] = null;
+	    if (this.$components[_uid]) {
+	      delete this.$components[_uid];
+	    }
 	  };
 	};
 	
