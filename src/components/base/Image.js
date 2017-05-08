@@ -1,6 +1,7 @@
 export default function(Van) {
   // Image
   Van.Image = Van.component({
+    name: 'Image',
     data: {
       src: '',
       width: 500,

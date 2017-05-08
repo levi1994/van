@@ -1,6 +1,7 @@
 export default function(Van) {
   // Line
   Van.Line = Van.component({
+    name: 'Line',
     data: {
       x1: 0,
       y1: 0,

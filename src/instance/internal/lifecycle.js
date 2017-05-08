@@ -42,13 +42,26 @@ export function lifecycleMixin(Van) {
   };
 
   /**
-   * 组件销毁
+   * 组件销毁内部执行方法
    */
   Van.prototype._destroy = function() {
 
     // 找到组件的父组件，从父组件中移除该组件
     let parent = this.$parent;
-    parent.$unmount(this._uid);
+    parent.$unmount(this.$Component.name + '_' + this._uid);
+  };
+
+  /**
+   * 组件销毁api
+   */
+  Van.prototype.$destroy = function() {
+
+    // 触发beforeDestroy钩子
+    callHook(this, 'beforeDestroy');
+    this._destroy();
+
+    // 触发afterDestroy钩子
+    callHook(this, 'afterDestroy');
   };
 
 }

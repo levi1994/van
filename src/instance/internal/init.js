@@ -88,7 +88,8 @@ export default function(Van) {
     if (options.components) {
       for (let key in options.components) {
         let comp = options.components[key];
-        this.$components[comp._uid] = comp;
+        let componentName = options.components[key].$Component.name;
+        this.$components[componentName + '_' + comp._uid] = comp;
       }
     }
 

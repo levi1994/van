@@ -201,7 +201,8 @@
 	    if (options.components) {
 	      for (var _key in options.components) {
 	        var comp = options.components[_key];
-	        this.$components[comp._uid] = comp;
+	        var componentName = options.components[_key].$Component.name;
+	        this.$components[componentName + '_' + comp._uid] = comp;
 	      }
 	    }
 	
@@ -554,7 +555,14 @@
 	
 	  Van.prototype._destroy = function () {
 	    var parent = this.$parent;
-	    parent.$unmount(this._uid);
+	    parent.$unmount(this.$Component.name + '_' + this._uid);
+	  };
+	
+	  Van.prototype.$destroy = function () {
+	    callHook(this, 'beforeDestroy');
+	    this._destroy();
+	
+	    callHook(this, 'afterDestroy');
 	  };
 	}
 	
@@ -600,6 +608,7 @@
 	
 	  function Component(options) {
 	    this.options = options;
+	    this.name = options.name || 'anonymous';
 	    return this;
 	  }
 	
@@ -617,6 +626,8 @@
 	    }
 	
 	    instance.$isInstance = true;
+	
+	    instance.$Component = this;
 	
 	    return instance;
 	  };
@@ -652,6 +663,7 @@
 	  Van.prototype.$unmount = function (_uid) {
 	    if (this.$components[_uid]) {
 	      delete this.$components[_uid];
+	      this.reRender();
 	    }
 	  };
 	};
@@ -710,6 +722,7 @@
 	
 	exports.default = function (Van) {
 	  Van.Circle = Van.component({
+	    name: 'Circle',
 	    data: {
 	      x: 50,
 	      y: 80,
@@ -757,6 +770,7 @@
 	
 	exports.default = function (Van) {
 	  Van.Image = Van.component({
+	    name: 'Image',
 	    data: {
 	      src: '',
 	      width: 500,
@@ -779,7 +793,7 @@
 /* 10 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -787,6 +801,7 @@
 	
 	exports.default = function (Van) {
 	  Van.Text = Van.component({
+	    name: 'Text',
 	    data: {},
 	    render: function render() {}
 	  });
@@ -804,6 +819,7 @@
 	
 	exports.default = function (Van) {
 	  Van.Line = Van.component({
+	    name: 'Line',
 	    data: {
 	      x1: 0,
 	      y1: 0,

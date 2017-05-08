@@ -1,5 +1,6 @@
 export default function(Van) {
   Van.Circle = Van.component({
+    name: 'Circle',
     data: {
       x: 50,
       y: 80,

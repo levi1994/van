@@ -1,6 +1,7 @@
 var Van = window.Van;
 
 var Bird = Van.component({
+  name: 'Bird',
   data: {
     x: 100,
     y: 100,
@@ -34,10 +35,7 @@ var Bird = Van.component({
     this.vy = this.vy + g*t;
     if(this.y > 485 && !this.flag) {
       this.flag = true;
-      console.log("碰撞前速度: "+this.vy)
-      console.log("碰撞位置: "+this.y)
       this.vy = - 0.900001 * this.vy;
-      console.log("碰撞后速度："+this.vy)
     } 
     if(this.y < 485) {
       this.flag = false;
@@ -51,6 +49,7 @@ var Bird = Van.component({
 });
 
 var Block = Van.component({
+  name: 'Block',
   data: {
     x: 300,
     y: 0,

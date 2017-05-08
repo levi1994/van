@@ -11,6 +11,7 @@ export default function(Van) {
 
   function Component(options) {
     this.options = options;
+    this.name = options.name || 'anonymous';
     return this;
   }
 
@@ -32,6 +33,8 @@ export default function(Van) {
     }
 
     instance.$isInstance = true;
+
+    instance.$Component = this;
 
     return instance;
   };
@@ -73,6 +76,7 @@ export default function(Van) {
   Van.prototype.$unmount = function(_uid) {
     if (this.$components[_uid]) {
       delete this.$components[_uid];
+      this.reRender();
     }
   };
 }
