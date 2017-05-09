@@ -68,7 +68,9 @@ var BlockGroup = Van.component({
     x: 300
   },
   components: [
-    Block.newInstance(),
+    Block.newInstance({
+      y: extendsAttribute(x),
+    }),
     Block.newInstance()
   ]
 });

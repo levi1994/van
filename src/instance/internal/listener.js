@@ -72,6 +72,7 @@ function findTarget(event, comp, targets) {
 
     comp._mouseFlag = false;
   }
+
   // 遍历组件子节点
   let childrens = comp.$components;
   for (let key in childrens) {

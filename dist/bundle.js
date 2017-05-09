@@ -654,7 +654,7 @@
 	  Van.prototype.$mount = function (component) {
 	    var _uid = component._uid;
 	    component.$parent = this;
-	    this.$components[_uid] = component;
+	    this.$components[component.$Component.name + '_' + _uid] = component;
 	    if (component.$off) {
 	      (0, _index.toOffCanvas)(component);
 	    }
@@ -1065,7 +1065,9 @@
 	});
 	
 	exports.default = function (Van) {
-	  Van.use = function (func) {};
+	  Van.use = function (func) {
+	    func.call(Van);
+	  };
 	};
 
 /***/ }

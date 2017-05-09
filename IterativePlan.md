@@ -22,10 +22,11 @@
 #### Circle doing
 #### Rect  doing
 
-### 组件回收  todo
+### 组件回收  done
 
-### 子组件绑定父组件属性  todo
+### 子组件绑定父组件属性：当父组件属性更新时，子组件该属性也同时更新  doing
+#### 使用extend方式实现
 
-### 插件支持    todo
+### 插件支持    done
 
-### 修改$component实现
+### 修改$component实现  done

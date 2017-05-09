@@ -66,7 +66,7 @@ export default function(Van) {
     // get uid
     let _uid = component._uid;
     component.$parent = this;
-    this.$components[_uid] = component;
+    this.$components[component.$Component.name + '_' + _uid] = component;
     if (component.$off) {
       toOffCanvas(component);
     }
