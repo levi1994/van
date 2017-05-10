@@ -113,13 +113,13 @@ export default function(Van) {
     this._refresh = true;
 
     // 初始化消息处理器
-    this._handler = {};
+    this._handlers = {};
 
     // 初始化events
     // 先使用参数中的events直接覆盖
     // 如果有其他不能覆盖的情况，再做修改
-    if (options.handler) {
-      this._handler = options.handler;
+    if (options.handlers) {
+      this._handlers = options.handlers;
     }
 
     // 初始化内置方法

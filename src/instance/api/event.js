@@ -64,7 +64,7 @@ export default function(Van) {
    * @param {string} handlerName : 需处理的事件名称
    * @param {object|string|boolean} func : 事件处理函数
    */
-  Van.prototype.$registEvent = function(handlerName, func) {
+  Van.prototype.$registHandler = function(handlerName, func) {
 
     // 检测是否已包含该事件名称
     if (this._handler.hasOwnProperty(handlerName)) {
@@ -87,7 +87,7 @@ export default function(Van) {
    * 取消已注册事件
    * @param {string} handlerName : 需处理的事件名称
    */
-  Van.prototype.$unregistEvent = function(handlerName) {
+  Van.prototype.$unregistHandler = function(handlerName) {
 
     // 判断是否已注册该事件
     if (!this._handler.hasOwnProperty(handlerName)) {
