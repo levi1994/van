@@ -220,10 +220,10 @@
 	
 	    this._refresh = true;
 	
-	    this._handler = {};
+	    this._handlers = {};
 	
-	    if (options.handler) {
-	      this._handler = options.handler;
+	    if (options.handlers) {
+	      this._handlers = options.handlers;
 	    }
 	
 	    if (options.methods) {
@@ -906,7 +906,7 @@
 	  };
 	
 	  Van.prototype._handleDispatch = function (handlerName, data) {
-	    var func = this._handler[handlerName];
+	    var func = this._handlers[handlerName];
 	
 	    if (!func) {
 	      for (var key in this.$components) {
@@ -923,8 +923,8 @@
 	    }
 	  };
 	
-	  Van.prototype.$registEvent = function (handlerName, func) {
-	    if (this._handler.hasOwnProperty(handlerName)) {
+	  Van.prototype.$registHandler = function (handlerName, func) {
+	    if (this._handlers.hasOwnProperty(handlerName)) {
 	      (0, _index.tip)('handler注册失败:该handler名称已存在', 'error');
 	      return false;
 	    }
@@ -934,22 +934,22 @@
 	      return false;
 	    }
 	
-	    this._handler[handlerName] = func;
+	    this._handlers[handlerName] = func;
 	    return true;
 	  };
 	
-	  Van.prototype.$unregistEvent = function (handlerName) {
-	    if (!this._handler.hasOwnProperty(handlerName)) {
+	  Van.prototype.$unregistHandler = function (handlerName) {
+	    if (!this._handlers.hasOwnProperty(handlerName)) {
 	      (0, _index.tip)('事件取消注册失败:未找到名为' + handlerName + '的事件', 'warn');
 	      return false;
 	    }
 	
-	    delete this._handler[handlerName];
+	    delete this._handlers[handlerName];
 	    return true;
 	  };
 	
 	  Van.prototype._handleEmit = function (handlerName, data) {
-	    var func = this._handler[handlerName];
+	    var func = this._handlers[handlerName];
 	
 	    if (!func) {
 	      if (this.$isRoot) {
