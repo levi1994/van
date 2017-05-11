@@ -61,19 +61,19 @@ var Block = Van.component({
   }
 });
 
-// var BlockGroup = Van.component({
-//   data: {
-//     h1: 0,
-//     h2: 0,
-//     x: 300
-//   },
-//   components: [
-//     Block.newInstance({
-//       y: extendsAttribute(x),
-//     }),
-//     Block.newInstance()
-//   ]
-// });
+var BlockGroup = Van.component({
+  data: {
+    h1: 0,
+    h2: 0,
+    x: 300
+  },
+  components: [
+    Block.newInstance({
+      y: extendsAttribute(x),
+    }),
+    Block.newInstance()
+  ]
+});
 
 var van = new Van({
   el: '#stage',
