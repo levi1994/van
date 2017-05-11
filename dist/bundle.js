@@ -232,6 +232,45 @@
 	      }
 	    }
 	
+	    this._valueWatcher = {};
+	    if (options.props) {
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = options.props[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var _key2 = _step.value;
+	
+	          if (this._valueWatcher.hasOwnProperty(_key2)) {
+	            (0, _index.tip)('value属性名重复', 'warn');
+	          } else {
+	            options.data[_key2] = '';
+	            this._valueWatcher[_key2] = function (key, newValue) {
+	              self[key] = newValue;
+	            };
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	    }
+	
+	    for (var _key3 in options.data) {
+	      this._callValueWatcher(_key3, options.data[_key3]);
+	    }
+	
 	    this.data = this._initData(this, options.data, true);
 	
 	    if (this.$isRoot) {
@@ -283,6 +322,7 @@
 	          },
 	          set: function set(val) {
 	            value = vm._initData(vm, val);
+	            vm._callValueWatcher(key, value);
 	            vm.reRender();
 	          }
 	        });
@@ -296,6 +336,7 @@
 	            },
 	            set: function set(val) {
 	              value = vm._initData(vm, val);
+	              vm._callValueWatcher(key, value);
 	              vm.reRender();
 	            }
 	          });
@@ -321,6 +362,15 @@
 	    stage.addEventListener('mousemove', function (e) {
 	      self._resolveListener('mousemove', e);
 	    });
+	  };
+	
+	  Van.prototype._callValueWatcher = function (valueName, value) {
+	    for (var key in this.$components) {
+	      var comp = this.$components[key];
+	      if (comp._valueWatcher[valueName]) {
+	        comp._valueWatcher[valueName](valueName, value);
+	      }
+	    }
 	  };
 	
 	  function createCanvas(options) {
@@ -973,14 +1023,14 @@
 	  };
 	
 	  Van.prototype.$broadcast = function (handlerName, data) {
-	    this._handBroadcast(handlerName, data);
+	    this._handleBroadcast(handlerName, data);
 	  };
 	
-	  Van.prototype._handBroadcast = function (handlerName, data) {
+	  Van.prototype._handleBroadcast = function (handlerName, data) {
 	    if (this.$isRoot) {
 	      this.$dispatch(handlerName, data);
 	    } else {
-	      this.$parent._handBroadcast(handlerName, data);
+	      this.$parent._handleBroadcast(handlerName, data);
 	    }
 	  };
 	};

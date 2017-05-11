@@ -140,16 +140,16 @@ export default function(Van) {
    * @param {object|string|boolean} data : 传递的数据对象
    */
   Van.prototype.$broadcast = function(handlerName, data) {
-    this._handBroadcast(handlerName, data);
+    this._handleBroadcast(handlerName, data);
   };
 
-  Van.prototype._handBroadcast = function(handlerName, data) {
+  Van.prototype._handleBroadcast = function(handlerName, data) {
 
     // 判断是否为根组件
     if (this.$isRoot) {
       this.$dispatch(handlerName, data);
     } else {
-      this.$parent._handBroadcast(handlerName, data);
+      this.$parent._handleBroadcast(handlerName, data);
     }
   };
 

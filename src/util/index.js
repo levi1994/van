@@ -159,6 +159,11 @@ export function closeDebug() {
   debug = false;
 }
 
+/**
+ * 消息提示
+ * @param {string} message : 所提示消息
+ * @param {string} type : 消息类型
+ */
 export function tip(message, type) {
   if (!debug) {
     return;

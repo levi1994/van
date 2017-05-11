@@ -54,7 +54,6 @@ var Bird = Van.component({
 var Block = Van.component({
   name: 'Block',
   data: {
-    x: 300,
     y: 0,
     width: 50,
     height: 50,
@@ -66,22 +65,27 @@ var Block = Van.component({
     "brad": function(){
       console.log("broadcast!!");
     }
-  }
+  },
+  // 从父组件接收一个名叫x的参数
+  props: ['x']
 });
 
-// var BlockGroup = Van.component({
-//   data: {
-//     h1: 0,
-//     h2: 0,
-//     x: 300
-//   },
-//   components: [
-//     Block.newInstance({
-//       y: extendsAttribute(x),
-//     }),
-//     Block.newInstance()
-//   ]
-// });
+var BlockGroup = Van.component({
+  name: 'BlockGroup',
+  data: {
+    h1: 0,
+    h2: 0,
+    x: 300
+  },
+  components: [
+    Block.newInstance({
+      y:0
+    }),
+    Block.newInstance({
+      y:200
+    })
+  ]
+});
 
 var van = new Van({
   el: '#stage',
@@ -99,7 +103,7 @@ var van = new Van({
       src:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494224287122&di=6c111ce35c472d5e27c418bddb92cde2&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F14%2F74%2F43%2F34R58PICcD9_1024.jpg",
     }),
     Bird.newInstance(),
-    Block.newInstance(),
+    BlockGroup.newInstance(),
   ],
   area: function() {
     return true;

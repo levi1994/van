@@ -1,4 +1,4 @@
-import {isObject, isArray, arrayUtil, initCtx} from '../../util/index';
+import {isObject, isArray, arrayUtil, initCtx, tip} from '../../util/index';
 import {callHook} from './lifecycle.js';
 
 let uid = 0;
@@ -93,7 +93,6 @@ export default function(Van) {
       }
     }
 
-
     // 初始化鼠标事件
     // 目前主要有click、mouseleave、mouseenter等事件
     // 使用数组的方式存储
@@ -127,6 +126,26 @@ export default function(Van) {
       for (var key in options.methods) {
         this[key] = options.methods[key];
       }
+    }
+
+    // 初始化继承属性
+    this._valueWatcher = {};
+    if (options.props) {
+      for (let key of options.props) {
+        // 针对每一个value创建valueWatcher
+        if (this._valueWatcher.hasOwnProperty(key)) {
+          tip('value属性名重复', 'warn');
+        } else {
+          options.data[key] = '';
+          this._valueWatcher[key] = function(key, newValue) {
+            self[key] = newValue;
+          };
+        }
+      }
+    }
+    // 初始化子组件的继承属性
+    for (let key in options.data) {
+      this._callValueWatcher(key, options.data[key]);
     }
 
     // 将普通数据（data）转为响应式数据并放到vm上
@@ -189,6 +208,7 @@ export default function(Van) {
           },
           set: function(val) {
             value = vm._initData(vm, val);
+            vm._callValueWatcher(key, value);
             vm.reRender();
           }
         });
@@ -202,6 +222,7 @@ export default function(Van) {
             },
             set: function(val) {
               value = vm._initData(vm, val);
+              vm._callValueWatcher(key, value);
               vm.reRender();
             }
           });
@@ -225,6 +246,19 @@ export default function(Van) {
     stage.addEventListener('mousemove', function(e) {
       self._resolveListener('mousemove', e);
     });
+  };
+
+  /**
+   * 当数据产生变动时，执行变动监听器
+   */
+  Van.prototype._callValueWatcher = function(valueName, value) {
+    // 找到所有子组件
+    for (let key in this.$components) {
+      let comp = this.$components[key];
+      if (comp._valueWatcher[valueName]) {
+        comp._valueWatcher[valueName](valueName, value);
+      }
+    }
   };
 
   // 根据传入选项创建canvas
