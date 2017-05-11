@@ -18,7 +18,7 @@ export default function(Van) {
   };
 
   /**
-   * 广播事件，事件不断向下级广播
+   * 派发事件，事件不断向下级派发
    * @param {string} handlerName : 事件名称
    * @param {object|string|boolean} data : 传输数据
    */
@@ -36,7 +36,7 @@ export default function(Van) {
    * @param {object|string|boolean} func : 传输数据
    */
   Van.prototype._handleDispatch = function(handlerName, data) {
-    let func = this._handler[handlerName];
+    let func = this._handlers[handlerName];
 
     // 判断自身是否有处理该事件的函数
     if (!func) {
@@ -67,7 +67,7 @@ export default function(Van) {
   Van.prototype.$registHandler = function(handlerName, func) {
 
     // 检测是否已包含该事件名称
-    if (this._handler.hasOwnProperty(handlerName)) {
+    if (this._handlers.hasOwnProperty(handlerName)) {
       tip('handler注册失败:该handler名称已存在', 'error');
       return false;
     }
@@ -79,7 +79,7 @@ export default function(Van) {
     }
 
     // 注册事件
-    this._handler[handlerName] = func;
+    this._handlers[handlerName] = func;
     return true;
   };
 
@@ -90,12 +90,12 @@ export default function(Van) {
   Van.prototype.$unregistHandler = function(handlerName) {
 
     // 判断是否已注册该事件
-    if (!this._handler.hasOwnProperty(handlerName)) {
+    if (!this._handlers.hasOwnProperty(handlerName)) {
       tip('事件取消注册失败:未找到名为' + handlerName + '的事件', 'warn');
       return false;
     }
 
-    delete this._handler[handlerName];
+    delete this._handlers[handlerName];
     return true;
   };
 
@@ -106,7 +106,7 @@ export default function(Van) {
    * @param {object|string|boolean} data : 传递的数据对象
    */
   Van.prototype._handleEmit = function(handlerName, data) {
-    let func = this._handler[handlerName];
+    let func = this._handlers[handlerName];
 
     // 判断自身是否有处理该事件的函数
     if (!func) {
