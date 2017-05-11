@@ -3,7 +3,7 @@ export default function(Van) {
   Van.Text = Van.component({
     name: 'Text',
     data: {
-
+      text: ''
     },
     render: function() {
 
