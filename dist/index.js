@@ -44,6 +44,9 @@ var Bird = Van.component({
   handlers: {
     "clicks": function(){
       this.vy = -200;
+    },
+    "brad": function(){
+      console.log("broadcast!!");
     }
   }
 });
@@ -58,6 +61,11 @@ var Block = Van.component({
   },
   render: function() {
     this.$ctx.strokeRect(this.x, this.y, this.width, this.height);
+  },
+  handlers: {
+    "brad": function(){
+      console.log("broadcast!!");
+    }
   }
 });
 

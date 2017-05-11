@@ -133,4 +133,24 @@ export default function(Van) {
     }
   };
 
+  /**
+   * 广播事件
+   * 事件向组件树内所有组件广播
+   * @param {string} handlerName : 需处理的事件名称
+   * @param {object|string|boolean} data : 传递的数据对象
+   */
+  Van.prototype.$broadcast = function(handlerName, data) {
+    this._handBroadcast(handlerName, data);
+  };
+
+  Van.prototype._handBroadcast = function(handlerName, data) {
+
+    // 判断是否为根组件
+    if (this.$isRoot) {
+      this.$dispatch(handlerName, data);
+    } else {
+      this.$parent._handBroadcast(handlerName, data);
+    }
+  };
+
 }

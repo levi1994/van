@@ -802,7 +802,9 @@
 	exports.default = function (Van) {
 	  Van.Text = Van.component({
 	    name: 'Text',
-	    data: {},
+	    data: {
+	      text: ''
+	    },
 	    render: function render() {}
 	  });
 	};
@@ -967,6 +969,18 @@
 	      } else {
 	        return false;
 	      }
+	    }
+	  };
+	
+	  Van.prototype.$broadcast = function (handlerName, data) {
+	    this._handBroadcast(handlerName, data);
+	  };
+	
+	  Van.prototype._handBroadcast = function (handlerName, data) {
+	    if (this.$isRoot) {
+	      this.$dispatch(handlerName, data);
+	    } else {
+	      this.$parent._handBroadcast(handlerName, data);
 	    }
 	  };
 	};
