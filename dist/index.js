@@ -44,9 +44,6 @@ var Bird = Van.component({
   handlers: {
     "clicks": function(){
       this.vy = -200;
-    },
-    "brad": function(){
-      console.log("broadcast!!");
     }
   }
 });
