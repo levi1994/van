@@ -268,9 +268,15 @@ export default function(Van) {
     var canvas = document.createElement('canvas');
     var width = options.canvas ? options.canvas.width || 500 : 500;
     var height = options.canvas ? options.canvas.height || 500 : 500;
+    var background = options.canvas ? options.canvas.background || '' : '';
 
     canvas.setAttribute('width', width);
     canvas.setAttribute('height', height);
+    canvas.setAttribute('class', 'main-canvas');
+
+    // 背景色加在stage上
+    stage.style.background = background;
+
     canvas.style.position = 'absolute';
     canvas.style.left = 0;
     canvas.style.top = 0;

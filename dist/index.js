@@ -94,6 +94,11 @@ var van = new Van({
     x: 100,
     y: 100
   },
+  methods: {
+    sayHi: function() {
+      console.log('Hi');
+    }
+  },
   // 这里不要再用数组了，使用一个对象
   components: [
     Van.Image.newInstance({
@@ -112,11 +117,11 @@ var van = new Van({
   }
 });
 
-// for(var i=0;i<1000;i++){
-//   van.$mount(Bird.newInstance({
-//     x:i*10,
-//     y:100,
-//     vy: i*10
-//   }));
-// }
+for(var i=0;i<1000;i++){
+  van.$mount(Bird.newInstance({
+    x:i*10,
+    y:100,
+    vy: i*10
+  }));
+}
 

@@ -1,6 +1,9 @@
-var assert = require('assert');
+import chai from 'chai';
 import {mergeTo,
         isUndef} from '../src/util/index';
+import Van from '../src/instance/Van';
+
+var assert = chai.assert;
 
 describe('Array', function() {
   describe('#indexOf()', function() {
@@ -32,7 +35,6 @@ describe('Util', function() {
 });
 
 describe('Instance', function() {
-  
   describe('#mergeTo()', function(){
     it('合并后的对象拥有两个对象的属性', function() {
       let obj1 = {name: 'name'};
@@ -42,12 +44,5 @@ describe('Instance', function() {
       assert.equal('name', obj3.name);
     });
   });
-  describe('#isUndef()', function(){
-    it('undefined与null均返回true', function() {
-      let flag1 = isUndef(undefined);
-      let flag2 = isUndef(null);
-      assert.equal(true, flag1);
-      assert.equal(true, flag2);
-    });
-  });
+
 });

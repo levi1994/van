@@ -1,6 +1,6 @@
 {
   "name": "vanjs",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "a mvvm framwork",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "babel-eslint": "*",
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.24.1",
+    "chai": "^3.5.0",
     "eslint": "^2.13.1",
     "eslint-loader": "*",
     "eslint-plugin-promise": "^1.3.2",

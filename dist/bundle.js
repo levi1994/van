@@ -379,9 +379,14 @@
 	    var canvas = document.createElement('canvas');
 	    var width = options.canvas ? options.canvas.width || 500 : 500;
 	    var height = options.canvas ? options.canvas.height || 500 : 500;
+	    var background = options.canvas ? options.canvas.background || '' : '';
 	
 	    canvas.setAttribute('width', width);
 	    canvas.setAttribute('height', height);
+	    canvas.setAttribute('class', 'main-canvas');
+	
+	    stage.style.background = background;
+	
 	    canvas.style.position = 'absolute';
 	    canvas.style.left = 0;
 	    canvas.style.top = 0;
@@ -914,7 +919,7 @@
 	
 	exports.default = function (Van) {
 	  Van.prototype._recompute = function () {
-	    callRecompute(this);
+	    setTimeout(callRecompute(this), 0);
 	  };
 	
 	  function callRecompute(van) {

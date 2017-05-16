@@ -1,6 +1,7 @@
 export default function(Van) {
   Van.prototype._recompute = function() {
-    callRecompute(this);
+    // 使用setTimeout使渲染过程异步化
+    setTimeout(callRecompute(this), 0);
   };
 
   function callRecompute(van) {
