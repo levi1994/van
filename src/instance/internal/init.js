@@ -106,7 +106,7 @@ export default function(Van) {
       defaultListener.mouseenter = options.listener.mouseenter || [];
       defaultListener.mouseleave = options.listener.mouseleave || [];
     }
-    this.listener = defaultListener;
+    this.$listener = defaultListener;
 
     // 初始化刷新标识，如果需要刷新则为true
     this._refresh = true;

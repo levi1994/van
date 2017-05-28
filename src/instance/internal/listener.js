@@ -25,7 +25,7 @@ export default function(Van) {
    * 内部触发事件
    */
   Van.prototype._trigger = function(type) {
-    let events = this.listener[type];
+    let events = this.$listener[type];
     for (let key in events) {
       let func = events[key];
       func.call(this);
@@ -36,7 +36,7 @@ export default function(Van) {
    * 外部api注册事件
    */
   Van.prototype.$addEventListener = function(type, handle) {
-    this.listener[type].push(handle);
+    this.$listener[type].push(handle);
   };
 }
 
