@@ -81,14 +81,14 @@ export default function(Van) {
     this.recompute = options.recompute;
     this.created = options.created || function() {};
     this.area = options.area;
-    this.background = options.background;
 
     // 初始化$components
     this.$components = {};
     if (options.components) {
       for (let key in options.components) {
-        let comp = options.components[key];
-        let componentName = options.components[key].$Component.name;
+        // 将组件实例化
+        let comp = options.components[key].newInstance();
+        let componentName = comp.$Component.name;
         this.$components[componentName + '_' + comp._uid] = comp;
       }
     }

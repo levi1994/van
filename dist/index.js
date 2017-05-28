@@ -20,9 +20,6 @@ var Bird = Van.component({
         this.$ctx.stroke();
       }
   },
-  components: {
-
-  },
   off: false,
   recompute: function() {
     const t = 0.017;
@@ -75,10 +72,10 @@ var BlockGroup = Van.component({
     x: 300
   },
   components: [
-    Block.newInstance({
+    Block.extends({
       y:0
     }),
-    Block.newInstance({
+    Block.extends({
       y:200
     })
   ]
@@ -101,11 +98,11 @@ var van = new Van({
   },
   // 这里不要再用数组了，使用一个对象
   components: [
-    Van.Image.newInstance({
+    Van.Image.extends({
       src:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494224287122&di=6c111ce35c472d5e27c418bddb92cde2&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F14%2F74%2F43%2F34R58PICcD9_1024.jpg",
     }),
-    Bird.newInstance(),
-    BlockGroup.newInstance(),
+    Bird,
+    BlockGroup,
   ],
   area: function() {
     return true;

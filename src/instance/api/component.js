@@ -1,4 +1,4 @@
-import {mergeTo, toOffCanvas} from '../../util/index';
+import {mergeTo, toOffCanvas, copys} from '../../util/index';
 
 // component related interface
 export default function(Van) {
@@ -15,6 +15,9 @@ export default function(Van) {
     return this;
   }
 
+  /**
+   * 创建组件实例
+   */
   Component.prototype.newInstance = function(args) {
 
     // get param
@@ -37,6 +40,18 @@ export default function(Van) {
     instance.$Component = this;
 
     return instance;
+  };
+
+  /**
+   * 拓展组件（覆盖组件参数）
+   */
+  Component.prototype.extends = function(args) {
+    // 先把原有参数都复制一份
+    let newoptions = copys(true, {}, this.options);
+
+    // merge param and component data
+    newoptions.data = mergeTo(args, newoptions.data);
+    return Van.component(newoptions);
   };
 
   Component.prototype.newOffInstance = function(args) {

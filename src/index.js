@@ -1,6 +1,6 @@
-import Van from './instance/Van';
+import Van from './instance/van';
 
-Van.version = '0.1.2';
+Van.version = '0.1.1';
 
 window.Van = Van;
 

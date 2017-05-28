@@ -71,3 +71,22 @@ describe('Van初始化参数', function() {
         });
     });
 });
+
+var Child = Van.component({ 
+    // ...省略部分代码 
+    render: function() { 
+        this.$ctx.strokeRect(this.x, this.y, this.width, this.height); 
+        // 向子组件传递数据 
+        this.$emit("sing",this.name);
+    }
+    });
+    var Parent = Van.component({ 
+    // ...省略部分代码 
+    handler: { 
+        sing: function(data) { console.log(data); } 
+    } 
+});
+
+
+
+

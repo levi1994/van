@@ -50,17 +50,17 @@
 	  value: true
 	});
 	
-	var _Van = __webpack_require__(1);
+	var _van = __webpack_require__(1);
 	
-	var _Van2 = _interopRequireDefault(_Van);
+	var _van2 = _interopRequireDefault(_van);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	_Van2.default.version = '0.1.2';
+	_van2.default.version = '0.1.2';
 	
-	window.Van = _Van2.default;
+	window.Van = _van2.default;
 	
-	exports.default = _Van2.default;
+	exports.default = _van2.default;
 
 /***/ },
 /* 1 */
@@ -200,8 +200,8 @@
 	    this.$components = {};
 	    if (options.components) {
 	      for (var _key in options.components) {
-	        var comp = options.components[_key];
-	        var componentName = options.components[_key].$Component.name;
+	        var comp = options.components[_key].newInstance();
+	        var componentName = comp.$Component.name;
 	        this.$components[componentName + '_' + comp._uid] = comp;
 	      }
 	    }
@@ -433,6 +433,7 @@
 	exports.once = once;
 	exports.closeDebug = closeDebug;
 	exports.tip = tip;
+	exports.copys = copys;
 	function isObject(obj) {
 	  return obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
 	}
@@ -564,6 +565,63 @@
 	    console.log(message);
 	  }
 	}
+	
+	function copys() {
+	  var src,
+	      copyIsArray,
+	      copy,
+	      name,
+	      options,
+	      clone,
+	      target = arguments[0] || {},
+	      i = 1,
+	      length = arguments.length,
+	      deep = false;
+	
+	  if (typeof target === 'boolean') {
+	    deep = target;
+	
+	    target = arguments[i] || {};
+	    i++;
+	  }
+	
+	  if ((typeof target === 'undefined' ? 'undefined' : _typeof(target)) !== 'object' && !isFunction(target)) {
+	    target = {};
+	  }
+	
+	  if (i === length) {
+	    target = this;
+	    i--;
+	  }
+	
+	  for (; i < length; i++) {
+	    if ((options = arguments[i]) != null) {
+	      for (name in options) {
+	        src = target[name];
+	        copy = options[name];
+	
+	        if (target === copy) {
+	          continue;
+	        }
+	
+	        if (deep && copy && (isPlainObject(copy) || (copyIsArray = isArray(copy)))) {
+	          if (copyIsArray) {
+	            copyIsArray = false;
+	            clone = src && isArray(src) ? src : [];
+	          } else {
+	            clone = src && isPlainObject(src) ? src : {};
+	          }
+	
+	          target[name] = copys(deep, clone, copy);
+	        } else if (copy !== undefined) {
+	          target[name] = copy;
+	        }
+	      }
+	    }
+	  }
+	
+	  return target;
+	};
 
 /***/ },
 /* 4 */
@@ -685,6 +743,13 @@
 	    instance.$Component = this;
 	
 	    return instance;
+	  };
+	
+	  Component.prototype.extends = function (args) {
+	    var newoptions = (0, _index.copys)(true, {}, this.options);
+	
+	    newoptions.data = (0, _index.mergeTo)(args, newoptions.data);
+	    return Van.component(newoptions);
 	  };
 	
 	  Component.prototype.newOffInstance = function (args) {
