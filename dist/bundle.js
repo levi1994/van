@@ -56,7 +56,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	_van2.default.version = '0.1.2';
+	_van2.default.version = '0.1.1';
 	
 	window.Van = _van2.default;
 	
@@ -195,7 +195,6 @@
 	    this.recompute = options.recompute;
 	    this.created = options.created || function () {};
 	    this.area = options.area;
-	    this.background = options.background;
 	
 	    this.$components = {};
 	    if (options.components) {
@@ -216,7 +215,7 @@
 	      defaultListener.mouseenter = options.listener.mouseenter || [];
 	      defaultListener.mouseleave = options.listener.mouseleave || [];
 	    }
-	    this.listener = defaultListener;
+	    this.$listener = defaultListener;
 	
 	    this._refresh = true;
 	
@@ -1150,7 +1149,7 @@
 	  };
 	
 	  Van.prototype._trigger = function (type) {
-	    var events = this.listener[type];
+	    var events = this.$listener[type];
 	    for (var key in events) {
 	      var func = events[key];
 	      func.call(this);
@@ -1158,7 +1157,7 @@
 	  };
 	
 	  Van.prototype.$addEventListener = function (type, handle) {
-	    this.listener[type].push(handle);
+	    this.$listener[type].push(handle);
 	  };
 	};
 	
