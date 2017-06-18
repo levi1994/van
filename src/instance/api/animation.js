@@ -9,7 +9,7 @@ export default function(Van) {
       van.recompute();
     }
 
-    // excute sub-component's recompute()
+    // 执行子组件的recomputed()方法
     for (var key in van.$components) {
       if (van.$components.hasOwnProperty(key)) {
         callRecompute(van.$components[key]);

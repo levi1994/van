@@ -4,7 +4,7 @@ var conf = {
   devtool: '#source-map',
   entry: './src/index.js',
   output: {
-    filename: 'bundle.js',
+    filename: 'van.js',
     path: './dist'
   },
   module: {
@@ -13,9 +13,6 @@ var conf = {
       loader: 'babel!eslint'
     }]
   }
-  // plugins: [
-  //   new webpack.optimize.UglifyJsPlugin()
-  // ]
 }
 
 module.exports = conf;
